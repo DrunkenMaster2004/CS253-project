@@ -5,16 +5,16 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.home, name='marketplace_home'),
     
-    # Authentication URLs
+
     path('register/', views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='marketplace/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='marketplace/logout.html'), name='logout'),
     path('create-profile/', views.create_profile, name='create_profile'),
     
-    # Profile URLs
+
     path('profile/', views.profile, name='profile'),
     
-    # Item URLs
+
     path('item/add/', views.add_item, name='add_item'),
     path('item/<int:item_id>/', views.item_detail, name='item_detail'),
     path('item/<int:item_id>/edit/', views.edit_item, name='edit_item'),

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Marketplace - DealSimplified{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Welcome to DealSimplified Marketplace</h1>
+        <p class="lead">Buy and sell items within the campus community easily and securely.</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        {% if user.is_authenticated %}
+            <a href="{% url 'add_item' %}" class="btn btn-success"><i class="fas fa-plus-circle"></i> Sell an Item</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login to Sell</a>
+        {% endif %}
+        <a href="{% url 'items_list' %}" class="btn btn-outline-primary"><i class="fas fa-search"></i> Browse All</a>
+    </div>
+</div>
+
+<!-- Search Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{% url 'items_list' %}">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search for items..." aria-label="Search">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search">

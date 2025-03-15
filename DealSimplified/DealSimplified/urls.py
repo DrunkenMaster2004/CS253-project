@@ -14,15 +14,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+
 from django.contrib import admin
-from django.urls import path,include
-from django.conf import settings  
+from django.urls import path, include
+from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('LostnNFound/', include('LostNFound.urls')),  
-    path('marketplace/', include('marketplace.urls')), 
+    path('marketplace/', include('marketplace.urls')),
+    path('lostnfound/', include('LostNFound.urls')),
+    path('', RedirectView.as_view(url='/marketplace/'), name='home'),
 ]
 
 if settings.DEBUG:

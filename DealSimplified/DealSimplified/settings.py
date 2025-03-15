@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-!d58!$^*su3(yxrsizk9(re**0mds*dznssy*z1-hh@p$-=*0v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'marketplace',
+    'LostNFound',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +131,16 @@ import os
 # Media files settings
 MEDIA_URL = '/media/'  # URL to access media files in development
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory to store uploaded files
+
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'marketplace_home'
+LOGOUT_REDIRECT_URL = 'marketplace_home'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

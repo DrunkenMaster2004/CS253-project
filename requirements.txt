@@ -1,0 +1,7 @@
+django
+djangorestframework
+django-crispy-forms
+crispy-bootstrap4
+psycopg2-binary
+Pillow
+django-cors-headers

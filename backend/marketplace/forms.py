@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Item, ItemImage
+from .models import Profile, Item, ItemImage, ItemCategory
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -22,12 +22,14 @@ class ProfileForm(forms.ModelForm):
         fields = ['name', 'roll_no', 'phone_number', 'address', 'profile_picture']
 
 class ItemForm(forms.ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=ItemCategory.objects.all(),
+        empty_label="Select a Category",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
     class Meta:
         model = Item
-        fields = ['name', 'description', 'category', 'price', 'condition', 'age', 'is_negotiable']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
-        }
+        fields = ['name', 'price', 'description', 'category', 'is_available']
 
 class ItemImageForm(forms.ModelForm):
     class Meta:

@@ -1,0 +1,61 @@
+{% extends 'marketplace/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Marketplace - Browse Items{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center fw-bold text-primary">Browse Items</h2>
+
+    <!-- Filter Form -->
+    <form method="GET" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Category</label>
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category_id == category.id|stringformat:"s" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Min Price</label>
+                <input type="number" name="min_price" class="form-control" placeholder="Min" value="{{ min_price }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Max Price</label>
+                <input type="number" name="max_price" class="form-control" placeholder="Max" value="{{ max_price }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Search</label>
+                <input type="text" name="q" class="form-control" placeholder="Search items..." value="{{ query }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100"><i class="fa fa-search"></i> Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Items Grid -->
+    <div class="row">
+        {% for item in items %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="text-success fw-bold">₹{{ item.price }}</p>
+                        <a href="{% url 'item_detail' item.id %}" class="btn btn-sm btn-primary">View Item</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted text-center">No items available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

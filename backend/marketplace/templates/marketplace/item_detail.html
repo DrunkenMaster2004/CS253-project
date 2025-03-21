@@ -1,0 +1,47 @@
+{% extends 'marketplace/base.html' %}
+
+{% block title %}{{ item.name }} - DealSimplified{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card mb-4">
+        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+        <div class="card-body">
+            <h2 class="card-title">{{ item.name }}</h2>
+            <p class="card-text"><strong>Price:</strong> ₹{{ item.price }}</p>
+            <p class="card-text"><strong>Description:</strong> {{ item.description }}</p>
+            <p class="card-text"><strong>Seller:</strong> {{ item.seller.user.username }}</p>
+            <p class="card-text"><strong>Category:</strong> {{ item.category }}</p>
+            <p class="card-text"><strong>Views:</strong> {{ item.views }}</p>
+
+            {% if user.is_authenticated %}
+                {% if in_wishlist %}
+                    <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-warning">Remove from Wishlist</a>
+                {% else %}
+                    <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-primary">Add to Wishlist</a>
+                {% endif %}
+                <a href="{% url 'start_chat_item' item.id %}" class="btn btn-info">Chat with Seller</a>
+
+            {% endif %}
+        </div>
+    </div>
+
+    <h3>Similar Items</h3>
+    <div class="row">
+        {% for similar_item in similar_items %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ similar_item.image.url }}" class="card-img-top" alt="{{ similar_item.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ similar_item.name }}</h5>
+                        <p class="card-text">₹{{ similar_item.price }}</p>
+                        <a href="{% url 'item_detail' similar_item.id %}" class="btn btn-sm btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No similar items found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

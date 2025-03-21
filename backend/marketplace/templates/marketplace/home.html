@@ -1,7 +1,12 @@
 {% extends 'marketplace/base.html' %}
 
-{% block title %}Marketplace - DealSimplified{% endblock %}
+{% block title %}Marketplace{% endblock %}
 
 {% block content %}
-<p>working</p>
+<div class="container text-center">
+    <h1 class="mt-4">Welcome to the Marketplace</h1>
+    <p>Buy, sell, and discover amazing items.</p>
+    <a href="{% url 'add_item' %}" class="btn btn-primary">Sell an Item</a>
+    <a href="{% url 'items_list' %}" class="btn btn-success">Browse Items</a>
+</div>
 {% endblock %}

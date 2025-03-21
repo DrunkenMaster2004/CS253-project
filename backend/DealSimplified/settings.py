@@ -63,6 +63,8 @@ CORS_ALLOWED_ORIGINS = [
 
 ROOT_URLCONF = 'DealSimplified.urls'
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

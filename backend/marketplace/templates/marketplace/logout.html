@@ -1,7 +1,14 @@
-{% extends 'marketplace/base.html' %}
-
-{% block title %}Logout - DealSimplified{% endblock %}
+{% extends "marketplace/base.html" %}
 
 {% block content %}
-<p>working</p>
-{% endblock %}
+<h2>Confirm Log out !</h2>
+<div class="border-top pt-3">
+    <small class="text-muted">
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-info">Logout</button>
+        </form>
+       
+    </small>
+</div>
+{% endblock content%}

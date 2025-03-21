@@ -1,11 +1,11 @@
 {% extends 'marketplace/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Add Item - DealSimplified{% endblock %}
+{% block title %}Edit Item - DealSimplified{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2 class="mb-4">Add New Item</h2>
+    <h2 class="mb-4">Edit Item</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
@@ -13,7 +13,7 @@
         {% for form in image_formset %}
             {{ form|crispy }}
         {% endfor %}
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-success">Update</button>
     </form>
 </div>
 {% endblock %}

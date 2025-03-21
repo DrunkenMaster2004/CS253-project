@@ -48,8 +48,14 @@ def create_profile(request):
     return render(request, 'marketplace/create_profile.html', {'profile_form': profile_form})
 
 @login_required
+@login_required
 def profile(request):
-    profile = get_object_or_404(Profile, user=request.user)
+    # Check if profile exists, redirect if not
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        messages.info(request, 'Please complete your profile first.')
+        return redirect('create_profile')
     
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, request.FILES, instance=profile)

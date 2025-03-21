@@ -1,0 +1,32 @@
+{% extends "marketplace/base.html" %}
+
+{% block content %}
+<h2>My Wishlist</h2>
+<ul>
+    {% for wishlist_item in wishlist_items %}
+        <li>
+            <a href="{% url 'item_detail' wishlist_item.item.id %}">{{ wishlist_item.item.name }}</a>
+            <button onclick="toggleWishlist({{ wishlist_item.item.id }})">Remove from Wishlist</button>
+        </li>
+    {% empty %}
+        <li>No items in your wishlist.</li>
+    {% endfor %}
+</ul>
+
+<script>
+    function toggleWishlist(itemId) {
+        fetch(`/wishlist/toggle/${itemId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            location.reload();
+        });
+    }
+</script>
+
+{% endblock %}

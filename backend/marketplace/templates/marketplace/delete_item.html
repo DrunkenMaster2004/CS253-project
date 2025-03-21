@@ -1,0 +1,15 @@
+{% extends 'Marketplace/base.html' %}
+
+{% block title %}Delete Item{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <h1 class="mt-4 text-danger">Delete Item</h1>
+    <p>Are you sure you want to delete "{{ item.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

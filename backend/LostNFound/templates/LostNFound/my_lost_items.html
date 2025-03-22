@@ -7,7 +7,7 @@
     <h2 class="mt-4">My Lost Items</h2>
     
     <ul class="list-group">
-        {% for item in items %}  <!-- ✅ Fixed variable name -->
+        {% for item in my_items %}  <!-- ✅ Fixed variable name -->
             <li class="list-group-item">
                 <a href="{% url 'lost_item_detail' item.id %}">{{ item.name }}</a> - {{ item.location }}
             </li>

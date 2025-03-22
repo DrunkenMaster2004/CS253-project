@@ -1,0 +1,13 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Lost & Found{% endblock %}
+
+
+{% block content %}
+<div class="container text-center">
+    <h1 class="mt-4">Welcome to Lost & Found</h1>
+    <p>Report lost items, view found items, and claim your belongings.</p>
+    <a href="{% url 'report_lost_item' %}" class="btn btn-danger">Report Lost Item</a>
+    <a href="{% url 'report_found_item' %}" class="btn btn-success">Report Found Item</a>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Report Lost Item{% endblock %}
+
+{% block content %}
+    <h2>Report a Lost Item</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        {{ form.as_p }}
+    
+        <h3>Upload Images</h3>
+        {{ image_formset.management_form }}
+        {% for form in image_formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    
+        <button type="submit">Submit</button>
+    </form>
+    
+{% endblock %}

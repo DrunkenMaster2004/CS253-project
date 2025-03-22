@@ -1,0 +1,14 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Report Found Item{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Report a Found Item</h2>
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        {{ form.as_p }}  {# Django renders the form automatically with Bootstrap classes #}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

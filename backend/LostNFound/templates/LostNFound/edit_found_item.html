@@ -1,0 +1,29 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Edit Found Item{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Edit Found Item</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label">Item Name:</label>
+            <input type="text" name="item_name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Location Found:</label>
+            <input type="text" name="location" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description:</label>
+            <textarea name="description" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Item</button>
+    </form>
+</div>
+{% endblock %}

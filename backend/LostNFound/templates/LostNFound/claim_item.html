@@ -1,0 +1,21 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Claim Item{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Claim Item</h2>
+    <p>If you believe this item belongs to you, please provide details to verify your ownership.</p>
+    
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label">Describe why this item is yours:</label>
+            <textarea name="claim_details" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Claim</button>
+    </form>
+</div>
+{% endblock %}

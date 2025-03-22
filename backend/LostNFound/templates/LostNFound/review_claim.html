@@ -1,0 +1,22 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Review Claim{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Review Claim</h2>
+    
+    <div class="card p-3">
+        <h4>Item: {{ claim.item.name }}</h4>
+        <p><strong>Claimant:</strong> {{ claim.user.username }}</p>
+        <p><strong>Reason:</strong> {{ claim.reason }}</p>
+        <p><strong>Submitted on:</strong> {{ claim.submitted_at }}</p>
+    </div>
+    
+    <form method="POST" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+    </form>
+</div>
+{% endblock %}

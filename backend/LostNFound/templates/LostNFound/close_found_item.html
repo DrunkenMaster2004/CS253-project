@@ -1,0 +1,16 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Close Found Item{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Close Found Item Report</h2>
+    <p>Are you sure you want to mark this found item as resolved?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Yes, Close</button>
+        <a href="{% url 'found_items_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Found Items{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Found Items</h2>
+
+    {% if items %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for item in items %}
+                <div class="col d-flex align-items-stretch">
+                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden">
+                        {% with item.images.first as first_image %}
+                            {% if first_image %}
+                                <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                        {% endwith %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+                        </div>
+                        <div class="p-3 bg-light border-top mt-auto d-flex justify-content-center">
+                            <a href="{% url 'found_item_detail' item.id %}" class="btn btn-info w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center p-3 rounded">No found items available.</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -3,12 +3,18 @@
 {% block title %}Report Found Item{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4">Report a Found Item</h2>
-    <form method="post" class="mt-3">
+    <h2>Report a Found Item</h2>
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}  {# Django renders the form automatically with Bootstrap classes #}
-        <button type="submit" class="btn btn-primary">Submit</button>
+    
+        {{ form.as_p }}
+    
+        <h3>Upload Images</h3>
+        {{ image_formset.management_form }}
+        {% for form in image_formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    
+        <button type="submit">Submit</button>
     </form>
-</div>
 {% endblock %}

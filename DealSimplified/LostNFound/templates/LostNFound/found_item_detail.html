@@ -1,0 +1,20 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block title %}Found Item Detail{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">{{ item.name }}</h2>
+    
+    <p><strong>Category:</strong> {{ item.category.name }}</p>
+    <p><strong>Location Found:</strong> {{ item.found_location }}</p>
+    <p><strong>Date Found:</strong> {{ item.found_date|date:"F d, Y" }}</p>
+    <p><strong>Reported On:</strong> {{ item.date_reported|date:"F d, Y" }}</p>
+    <p><strong>Description:</strong> {{ item.description|default:"No description added" }}</p>
+    
+    {% if item.image %}
+        <p><strong>Image:</strong></p>
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="img-fluid rounded" style="max-width: 400px;">
+    {% endif %}
+</div>
+{% endblock %}

@@ -2,12 +2,19 @@
 
 {% block title %}Lost & Found{% endblock %}
 
-
 {% block content %}
 <div class="container text-center">
     <h1 class="mt-4">Welcome to Lost & Found</h1>
-    <p>Report lost items, view found items, and claim your belongings.</p>
-    <a href="{% url 'report_lost_item' %}" class="btn btn-danger">Report Lost Item</a>
-    <a href="{% url 'report_found_item' %}" class="btn btn-success">Report Found Item</a>
+    <p class="mb-4">Report lost items, view found items, and claim your belongings.</p>
+
+    <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
+        <a href="{% url 'report_lost_item' %}" class="btn btn-danger btn-lg px-4">Report Lost Item</a>
+        <a href="{% url 'report_found_item' %}" class="btn btn-success btn-lg px-4">Report Found Item</a>
+    </div>
+
+    <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
+        <a href="{% url 'lost_items_list' %}" class="btn btn-primary btn-lg px-4">Browse Lost Items</a>
+        <a href="{% url 'found_items_list' %}" class="btn btn-info btn-lg px-4">Browse Found Items</a>
+    </div>
 </div>
 {% endblock %}

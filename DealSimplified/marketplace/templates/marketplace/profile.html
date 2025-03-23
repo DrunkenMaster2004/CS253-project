@@ -4,7 +4,7 @@
 {% block content %}
 <div class="content-section">
     <div class="media" style="display: flex; align-items: center; gap: 20px;">
-      <img class="rounded-circle account-img" src="{{user.profile.image.url}}" style="width: 100px; height: 100px;">
+      <img class="rounded-circle account-img" src="{{user.profile.profile_picture.url}}" style="width: 100px; height: 100px;">
       <div class="media-body">
         <h2 class="account-heading" style="margin: 0;">{{user.username}}</h2>
         <p class="text-secondary" style="margin: 0;">{{user.email}}</p>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to DealSimplified{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <h1 class="mt-4">Welcome to DealSimplified</h1>
+    <p>Explore the marketplace and Lost & Found sections.</p>
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        <a href="{% url 'marketplace_home' %}" class="btn btn-primary btn-lg">Go to Marketplace</a>
+        <a href="{% url 'lostnfound_home' %}" class="btn btn-info btn-lg">Go to Lost & Found</a>
+    </div>
+</div>
+{% endblock %}

@@ -68,7 +68,12 @@ ROOT_URLCONF = 'DealSimplified.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Allows global templates
+        'DIRS':  [
+            os.path.join(BASE_DIR, 'DealSimplified', 'templates'),
+            os.path.join(BASE_DIR, 'LostNFound', 'templates'),
+            os.path.join(BASE_DIR, 'marketplace', 'templates'),
+        ],  # Allows global templates
+
         'APP_DIRS': True,  # Enables app-specific templates
         'OPTIONS': {
             'context_processors': [

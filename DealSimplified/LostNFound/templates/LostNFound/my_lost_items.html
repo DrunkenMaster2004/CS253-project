@@ -3,17 +3,35 @@
 {% block title %}My Lost Items{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4">My Lost Items</h2>
-    
-    <ul class="list-group">
-        {% for item in items %}  <!-- ✅ Fixed variable name -->
-            <li class="list-group-item">
-                <a href="{% url 'lost_item_detail' item.id %}">{{ item.name }}</a> - {{ item.location }}
-            </li>
-        {% empty %}
-            <li class="list-group-item">No lost items listed.</li>
-        {% endfor %}
-    </ul>
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">My Lost Items</h2>
+
+    {% if items %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for item in items %}
+                <div class="col d-flex align-items-stretch">
+                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden">
+                        {% with item.images.first as first_image %}
+                            {% if first_image %}
+                                <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                        {% endwith %}
+                        <div class="p-3 bg-light border-top mt-auto d-flex justify-content-between gap-2">
+                            <a href="{% url 'lost_item_detail' item.id %}" class="btn btn-info flex-fill">View</a>
+                            <a href="{% url 'edit_lost_item' item.id %}" class="btn btn-warning flex-fill">Edit</a>
+                            <form action="{% url 'close_lost_item' item.id %}" method="post" class="flex-fill">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger w-100">Close</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center p-3 rounded">No lost items listed.</div>
+    {% endif %}
 </div>
 {% endblock %}

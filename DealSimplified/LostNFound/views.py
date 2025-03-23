@@ -242,16 +242,16 @@ def found_items_list(request):
 @login_required
 def my_lost_items(request):
     profile = Profile.objects.get(user=request.user)
-    items = LostItem.objects.filter(reporter=profile).order_by('-date_reported')
+    my_items = LostItem.objects.filter(reporter=profile).order_by('-date_reported')
     
-    return render(request, 'LostNFound/my_lost_items.html', {'items': items})
+    return render(request, 'LostNFound/my_lost_items.html', {'items': my_items})
 
 @login_required
 def my_found_items(request):
     profile = Profile.objects.get(user=request.user)
-    items = FoundItem.objects.filter(reporter=profile).order_by('-date_reported')
+    my_items = FoundItem.objects.filter(reporter=profile).order_by('-date_reported')
     
-    return render(request, 'LostNFound/my_found_items.html', {'items': items})
+    return render(request, 'LostNFound/my_found_items.html', {'items': my_items})
 
 @login_required
 def edit_lost_item(request, item_id):

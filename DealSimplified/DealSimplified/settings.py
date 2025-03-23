@@ -149,8 +149,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory to store uploaded file
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'marketplace_home'

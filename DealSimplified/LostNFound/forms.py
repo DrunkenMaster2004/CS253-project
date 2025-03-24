@@ -1,19 +1,12 @@
 from django import forms
-from .models import LostItem, FoundItem, ItemImage, Claim
-from .models import LostItem, LostFoundCategory
+from .models import LostItem, FoundItem, ItemImage, Claim, LostFoundCategory
 
 class LostItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(
-        queryset=LostFoundCategory.objects.none(),  # Initially empty
+        queryset=LostFoundCategory.objects.all(),  # Load all categories dynamically
         empty_label="Select Category",
         required=True
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['category'].queryset = LostFoundCategory.objects.filter(
-            name__in=["Electronics", "Clothing", "Accessories", "Documents", "Miscellaneous"]
-        )
 
     class Meta:
         model = LostItem
@@ -26,16 +19,10 @@ class LostItemForm(forms.ModelForm):
 
 class FoundItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(
-        queryset=LostFoundCategory.objects.none(),  # Initially empty
+        queryset=LostFoundCategory.objects.all(),  # Load all categories dynamically
         empty_label="Select Category",
         required=True
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['category'].queryset = LostFoundCategory.objects.filter(
-            name__in=["Electronics", "Clothing", "Accessories", "Documents", "Miscellaneous"]
-        )
 
     class Meta:
         model = FoundItem
@@ -45,7 +32,6 @@ class FoundItemForm(forms.ModelForm):
             'additional_details': forms.Textarea(attrs={'rows': 3}),
             'found_date': forms.DateInput(attrs={'type': 'date'}),
         }
-
 
 class ItemImageForm(forms.ModelForm):
     class Meta:

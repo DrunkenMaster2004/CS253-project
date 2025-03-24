@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from marketplace.views import start_chat  # Import chat from Marketplace
 
 urlpatterns = [
     path('', views.home, name='lostnfound_home'),
@@ -26,4 +27,10 @@ urlpatterns = [
     path('found/<int:item_id>/claim/', views.claim_found_item, name='claim_found_item'),
     path('claim/<int:claim_id>/review/', views.review_claim, name='review_claim'),
     path('match/<int:match_id>/confirm/', views.confirm_match, name='confirm_match'),
+   
+    path('chat/<int:item_id>/', views.start_chat_lostfound, name='start_chat_lostfound'),
+
+
+
+   
 ]

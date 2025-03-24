@@ -2,9 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from marketplace.models import Profile
+from marketplace.models import Profile, Chat
 from .models import LostItem, FoundItem, LostFoundCategory, Claim, Match, ItemImage
 from .forms import LostItemForm, FoundItemForm, LostItemImageFormSet, FoundItemImageFormSet, ClaimForm
+from django.contrib.auth.models import User
+# from marketplace.models import Chat, Message # Import from Marketplace
+
+
 
 def home(request):
     lost_items = LostItem.objects.filter(status='open').order_by('-date_reported')[:5]
@@ -475,3 +479,17 @@ def find_potential_matches_for_found(found_item):
                 found_item=found_item,
                 defaults={'match_percentage': match_percentage}
             )
+@login_required
+def start_chat_lostfound(request, item_id):
+    item = get_object_or_404(LostItem, id=item_id)
+    profile = Profile.objects.get(user=request.user)
+
+    # Create or retrieve existing chat between the logged-in user and the item's reporter
+    chat, created = Chat.objects.get_or_create(
+        sender=profile,
+        receiver=item.reporter,
+    )
+
+    # Redirect to the chat detail page
+    return redirect('chat_detail', chat.id)
+

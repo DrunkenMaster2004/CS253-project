@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from .models import Item, ItemCategory, Profile, Wishlist, Chat, Message, ChatThread
 from .forms import UserRegisterForm, ProfileForm, ItemForm, ItemImageFormSet
 
+
 def home(request):
     items = Item.objects.filter(is_available=True).order_by('-date_posted')[:12]
     categories = ItemCategory.objects.all()

@@ -3,27 +3,25 @@
 {% block title %}Edit Found Item{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4">Edit Found Item</h2>
-    <form method="post">
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Edit Found Item</h2>
+    <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
         {% csrf_token %}
         
-        <div class="mb-3">
-            <label class="form-label">Item Name:</label>
-            <input type="text" name="item_name" class="form-control" required>
+        {{ form.as_p }}
+        
+        <h3 class="mt-3">Update Images</h3>
+        {{ image_formset.management_form }}
+        <div class="row">
+            {% for form in image_formset %}
+                <div class="col-md-4">{{ form.as_p }}</div>
+            {% endfor %}
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">Location Found:</label>
-            <input type="text" name="location" class="form-control" required>
+        
+        <div class="d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+            <a href="{% url 'my_found_items' %}" class="btn btn-secondary ms-3">Cancel</a>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">Description:</label>
-            <textarea name="description" class="form-control" rows="3" required></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Update Item</button>
     </form>
 </div>
 {% endblock %}

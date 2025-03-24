@@ -1,14 +1,15 @@
-
 {% extends "marketplace/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="content-section">
     <div class="media" style="display: flex; align-items: center; gap: 20px;">
-      <img class="rounded-circle account-img" src="{{user.profile.profile_picture.url}}" style="width: 100px; height: 100px;">
-      <div class="media-body">
-        <h2 class="account-heading" style="margin: 0;">{{user.username}}</h2>
-        <p class="text-secondary" style="margin: 0;">{{user.email}}</p>
-      </div>
+        <img class="rounded-circle account-img" 
+             src="{% if user.profile.profile_picture %}{{ user.profile.profile_picture.url }}{% else %}/media/profile_pics/def.png{% endif %}" 
+             style="width: 100px; height: 100px;">
+        <div class="media-body">
+            <h2 class="account-heading" style="margin: 0;">{{ user.username }}</h2>
+            <p class="text-secondary" style="margin: 0;">{{ user.email }}</p>
+        </div>
     </div>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
@@ -21,4 +22,4 @@
         </div>
     </form>
 </div>
-{% endblock content%}
+{% endblock content %}

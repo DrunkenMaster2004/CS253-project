@@ -14,7 +14,7 @@
     
     {% if item.image %}
         <p><strong>Image:</strong></p>
-        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="img-fluid rounded" style="max-width: 400px;">
+        <img src="{{ item.images.first.url }}" alt="{{ item.name }}" class="img-fluid rounded" style="max-width: 400px;">
     {% endif %}
 </div>
 {% endblock %}

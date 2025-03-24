@@ -18,6 +18,9 @@
                                 <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
                             {% endif %}
                         {% endwith %}
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ item.name }}</h5> <!-- Item name added here -->
+                        </div>
                         <div class="p-3 bg-light border-top mt-auto d-flex justify-content-between gap-2">
                             <a href="{% url 'lost_item_detail' item.id %}" class="btn btn-info flex-fill">View</a>
                             <a href="{% url 'edit_lost_item' item.id %}" class="btn btn-warning flex-fill">Edit</a>

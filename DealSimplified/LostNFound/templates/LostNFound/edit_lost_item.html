@@ -1,10 +1,10 @@
 {% extends 'LostNFound/base.html' %}
 
-{% block title %}Edit Found Item{% endblock %}
+{% block title %}Edit Lost Item{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Edit Found Item</h2>
+    <h2 class="mb-4 text-center">Edit Lost Item</h2>
     <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
         {% csrf_token %}
         
@@ -20,7 +20,7 @@
         
         <div class="d-flex justify-content-center mt-3">
             <button type="submit" class="btn btn-primary px-4">Save Changes</button>
-            <a href="{% url 'my_found_items' %}" class="btn btn-secondary ms-3">Cancel</a>
+            <a href="{% url 'my_lost_items' %}" class="btn btn-secondary ms-3">Cancel</a>
         </div>
     </form>
 </div>

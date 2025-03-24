@@ -391,3 +391,8 @@ def chat_detail(request, chat_id):
         'profile': profile,
         'chats': chats,
     })
+
+
+def cart_view(request):
+    return render(request, 'marketplace/cart.html')  # Ensure you have a 'cart.html' template
+

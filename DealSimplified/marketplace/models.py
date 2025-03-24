@@ -110,6 +110,18 @@ def create_user_profile(sender, instance, created, **kwargs):
 class ChatThread(models.Model):
     participants = models.ManyToManyField(User)
 
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.item.name} in {self.user.username}'s cart"
+
+    def get_total_price(self):
+        return self.quantity * self.item.price
+
 # class Message(models.Model):
 #     thread = models.ForeignKey(ChatThread, related_name='messages', on_delete=models.CASCADE)
 #     sender = models.ForeignKey(User, on_delete=models.CASCADE)

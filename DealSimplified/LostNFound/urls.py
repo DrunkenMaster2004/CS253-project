@@ -27,10 +27,17 @@ urlpatterns = [
     path('found/<int:item_id>/claim/', views.claim_found_item, name='claim_found_item'),
     path('claim/<int:claim_id>/review/', views.review_claim, name='review_claim'),
     path('match/<int:match_id>/confirm/', views.confirm_match, name='confirm_match'),
-   
+    
+    # Chat URL
     path('chat/<int:item_id>/', views.start_chat_lostfound, name='start_chat_lostfound'),
+    
+    # Notification URLs
+    path('notifications/', views.notifications_list, name='notifications_list'),
+    path('notifications/mark-read/<int:notification_id>/', views.mark_notification_read, name='mark_notification_read'),
+    path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    path('api/unread-notifications-count/', views.unread_notifications_count, name='unread_notifications_count'),
+    path('claims/to-review/', views.my_claims_to_review, name='my_claims_to_review'),
 
+    
 
-
-   
 ]

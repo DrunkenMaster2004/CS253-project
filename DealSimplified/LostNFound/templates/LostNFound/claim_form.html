@@ -1,0 +1,23 @@
+<!-- claim_form.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white shadow-md rounded-lg p-6" x-data="{ showForm: false }">
+    <h2 class="text-2xl font-bold mb-4">Claim Item: {{ item.name }}</h2>
+    <button @click="showForm = !showForm" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Submit Claim
+    </button>
+
+    <form x-show="showForm" action="{% url 'claim_item' item.id %}" method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="proof_details" class="block text-sm font-medium text-gray-700">Proof of Ownership</label>
+            <textarea id="proof_details" name="proof_details" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required></textarea>
+        </div>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Submit Claim
+        </button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'LostNFound/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Claims to Review</h2>
+    
+    {% if claims %}
+        <div class="list-group">
+            {% for claim in claims %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ claim.found_item.name }}</h5>
+                        <small>{{ claim.date_claimed|date:"M d, Y" }}</small>
+                    </div>
+                    <p class="mb-1"><strong>Claimed by:</strong> {{ claim.claimant.user.username }}</p>
+                    <p class="mb-1"><strong>Proof details:</strong> {{ claim.proof_details }}</p>
+                    <div class="mt-3">
+                        <a href="{% url 'review_claim' claim.id %}" class="btn btn-primary">Review Claim</a>
+                        <a href="{% url 'found_item_detail' claim.found_item.id %}" class="btn btn-outline-secondary">View Item</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            You don't have any pending claims to review.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

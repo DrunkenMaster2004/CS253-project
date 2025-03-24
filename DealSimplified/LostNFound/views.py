@@ -7,6 +7,7 @@ from .models import LostItem, FoundItem, LostFoundCategory, Claim, Match, ItemIm
 from .forms import LostItemForm, FoundItemForm, LostItemImageFormSet, FoundItemImageFormSet, ClaimForm
 from django.contrib.auth.models import User
 # from marketplace.models import Chat, Message # Import from Marketplace
+from django.http import JsonResponse
 
 
 
@@ -111,6 +112,7 @@ def found_item_detail(request, item_id):
     return render(request, 'LostNFound/found_item_detail.html', context)
 
 @login_required
+@login_required
 def claim_found_item(request, item_id):
     found_item = get_object_or_404(FoundItem, id=item_id)
     profile = Profile.objects.get(user=request.user)
@@ -127,6 +129,16 @@ def claim_found_item(request, item_id):
             claim.claimant = profile
             claim.save()
             
+            # Create notification for the item reporter
+            Notification.objects.create(
+                recipient=found_item.reporter,
+                sender=profile,
+                notification_type='claim',
+                found_item=found_item,
+                claim=claim,
+                message=f"{profile.user.username} has claimed your found item: {found_item.name}"
+            )
+            
             messages.success(request, 'Your claim has been submitted. The finder will review your claim.')
             return redirect('found_item_detail', item_id=found_item.id)
     else:
@@ -137,32 +149,59 @@ def claim_found_item(request, item_id):
         'item': found_item
     })
 
+
 @login_required
 def review_claim(request, claim_id):
     claim = get_object_or_404(Claim, id=claim_id)
-    
     if claim.found_item.reporter.user != request.user:
         messages.error(request, 'You are not authorized to review this claim.')
         return redirect('found_item_detail', item_id=claim.found_item.id)
     
     if request.method == 'POST':
         action = request.POST.get('action')
+        review_text = request.POST.get('review_text', '')
+        
+        # Add a review field to your Claim model if it doesn't exist
+        # claim.review = review_text
+        # claim.save()
         
         if action == 'approve':
             claim.status = 'approved'
             claim.save()
-            
             claim.found_item.status = 'claimed'
             claim.found_item.save()
             
             other_claims = Claim.objects.filter(found_item=claim.found_item).exclude(id=claim.id)
             other_claims.update(status='rejected')
             
+            # Create notification for the claimant
+            Notification.objects.create(
+                recipient=claim.claimant,
+                sender=Profile.objects.get(user=request.user),
+                notification_type='status',
+                found_item=claim.found_item,
+                claim=claim,
+                message=f"Your claim for {claim.found_item.name} has been approved!" + 
+                        (f" Review: {review_text}" if review_text else "")
+            )
+            
             messages.success(request, 'You have approved this claim. The item has been marked as claimed.')
         
         elif action == 'reject':
             claim.status = 'rejected'
             claim.save()
+            
+            # Create notification for the claimant
+            Notification.objects.create(
+                recipient=claim.claimant,
+                sender=Profile.objects.get(user=request.user),
+                notification_type='status',
+                found_item=claim.found_item,
+                claim=claim,
+                message=f"Your claim for {claim.found_item.name} has been rejected." + 
+                        (f" Reason: {review_text}" if review_text else "")
+            )
+            
             messages.success(request, 'You have rejected this claim.')
         
         return redirect('found_item_detail', item_id=claim.found_item.id)
@@ -489,7 +528,87 @@ def start_chat_lostfound(request, item_id):
         sender=profile,
         receiver=item.reporter,
     )
+    
+    # Create notification for the item reporter about new chat
+    if created:
+        Notification.objects.create(
+            recipient=item.reporter,
+            sender=profile,
+            notification_type='chat',
+            lost_item=item,
+            message=f"{profile.user.username} has started a chat with you about your lost item: {item.name}"
+        )
 
     # Redirect to the chat detail page
     return redirect('chat_detail', chat.id)
 
+
+from django.shortcuts import render
+from .models import Notification
+
+def notifications_view(request):
+    notifications = Notification.objects.filter(user=request.user, is_read=False)
+    return render(request, 'notifications.html', {'notifications': notifications})
+from django.utils.timesince import timesince
+
+@login_required
+def notifications_list(request):
+    profile = Profile.objects.get(user=request.user)
+    notifications = Notification.objects.filter(recipient=profile)
+    
+    if request.GET.get('format') == 'json':
+        notifications_data = []
+        for notification in notifications:
+            notifications_data.append({
+                'id': notification.id,
+                'message': notification.message,
+                'is_read': notification.is_read,
+                'time_ago': timesince(notification.created_at)
+            })
+        return JsonResponse({'notifications': notifications_data})
+    
+    return render(request, 'LostNFound/notifications.html', {
+        'notifications': notifications
+    })
+
+@login_required
+def mark_notification_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, recipient__user=request.user)
+    notification.is_read = True
+    notification.save()
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'success'})
+    
+    return redirect('notifications_list')
+
+@login_required
+def mark_all_notifications_read(request):
+    profile = Profile.objects.get(user=request.user)
+    Notification.objects.filter(recipient=profile, is_read=False).update(is_read=True)
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'success'})
+    
+    return redirect('notifications_list')
+
+@login_required
+def unread_notifications_count(request):
+    try:
+        profile = Profile.objects.get(user=request.user)
+        count = Notification.objects.filter(recipient=profile, is_read=False).count()
+        return JsonResponse({'count': count})
+    except Exception:
+        # Return 0 if the table doesn't exist yet or any other error occurs
+        return JsonResponse({'count': 0})
+@login_required
+def my_claims_to_review(request):
+    profile = Profile.objects.get(user=request.user)
+    claims_to_review = Claim.objects.filter(
+        found_item__reporter=profile,
+        status='pending'
+    ).order_by('-date_claimed')
+    
+    return render(request, 'LostNFound/my_claims_to_review.html', {
+        'claims': claims_to_review
+    })

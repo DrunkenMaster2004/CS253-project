@@ -1,22 +1,47 @@
 {% extends 'LostNFound/base.html' %}
 
-{% block title %}Review Claim{% endblock %}
-
 {% block content %}
-<div class="container">
-    <h2 class="mt-4">Review Claim</h2>
-    
-    <div class="card p-3">
-        <h4>Item: {{ claim.item.name }}</h4>
-        <p><strong>Claimant:</strong> {{ claim.user.username }}</p>
-        <p><strong>Reason:</strong> {{ claim.reason }}</p>
-        <p><strong>Submitted on:</strong> {{ claim.submitted_at }}</p>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Review Claim for {{ claim.found_item.name }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Item Details</h5>
+                    <p><strong>Item:</strong> {{ claim.found_item.name }}</p>
+                    <p><strong>Category:</strong> {{ claim.found_item.category.name }}</p>
+                    <p><strong>Found at:</strong> {{ claim.found_item.found_location }}</p>
+                    <p><strong>Found on:</strong> {{ claim.found_item.found_date }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Claim Details</h5>
+                    <p><strong>Claimed by:</strong> {{ claim.claimant.user.username }}</p>
+                    <p><strong>Date Claimed:</strong> {{ claim.date_claimed }}</p>
+                    <p><strong>Proof of Ownership:</strong></p>
+                    <div class="alert alert-secondary">{{ claim.proof_details }}</div>
+                </div>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="review_text">Your Review (optional):</label>
+                    <textarea class="form-control" id="review_text" name="review_text" rows="4"></textarea>
+                    <small class="form-text text-muted">Add any comments or questions about this claim.</small>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" name="action" value="approve" class="btn btn-success">
+                        <i class="fas fa-check"></i> Approve Claim
+                    </button>
+                    <button type="submit" name="action" value="reject" class="btn btn-danger">
+                        <i class="fas fa-times"></i> Reject Claim
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    
-    <form method="POST" class="mt-3">
-        {% csrf_token %}
-        <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
-        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
-    </form>
 </div>
 {% endblock %}

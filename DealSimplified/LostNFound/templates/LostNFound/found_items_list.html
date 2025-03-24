@@ -10,7 +10,7 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for item in items %}
                 <div class="col d-flex align-items-stretch">
-                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden">
+                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden {% if item.status == 'claimed' %}border-success{% endif %}">
                         {% with item.images.first as first_image %}
                             {% if first_image %}
                                 <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
@@ -21,19 +21,27 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ item.name }}</h5>
                             <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+                            <div class="d-flex justify-content-center mt-2">
+                                {% if item.status == 'claimed' %}
+                                    <span class="badge bg-success">Claimed</span>
+                                {% elif item.status == 'closed' %}
+                                    <span class="badge bg-secondary">Closed</span>
+                                {% else %}
+                                    <span class="badge bg-primary">Open</span>
+                                {% endif %}
+                            </div>
                         </div>
-                        <div class="p-3 bg-light border-top mt-auto d-flex justify-content-center">
-                            <a href="{% url 'found_item_detail' item.id %}" class="btn btn-info w-100">View Details</a>
-                            {% comment %} {% if user.is_authenticated and user != item.reporter.user %}
-                                <a href="{% url 'start_chat' item.reporter.user.id %}" class="btn btn-primary ms-2">
-                                    Chat with Reporter
-                                </a>
-                            {% endif %} {% endcomment %}
-                            {% if user.is_authenticated and user != item.reporter.user %}
-                                <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-primary ms-2">
+                        <div class="p-3 bg-light border-top mt-auto d-flex justify-content-center gap-2">
+                            <a href="{% url 'found_item_detail' item.id %}" class="btn btn-info flex-fill">View Details</a>
+                            
+                            {% if user.is_authenticated and user != item.reporter.user and item.status == 'open' %}
+                                <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-primary flex-fill">
                                     Start Chat
                                 </a>
-                            {% endif %} 
+                                <a href="{% url 'claim_found_item' item.id %}" class="btn btn-success flex-fill">
+                                    Claim Item
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

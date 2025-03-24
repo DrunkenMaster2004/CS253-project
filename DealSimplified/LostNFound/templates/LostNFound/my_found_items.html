@@ -10,7 +10,7 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for item in items %}
                 <div class="col d-flex align-items-stretch">
-                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden">
+                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden {% if item.status == 'claimed' %}border-success{% endif %}">
                         {% with item.images.first as first_image %}
                             {% if first_image %}
                                 <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
@@ -19,15 +19,26 @@
                             {% endif %}
                         {% endwith %}
                         <div class="card-body">
-                            <h5 class="card-title text-center">{{ item.name }}</h5> <!-- Item name added here -->
+                            <h5 class="card-title text-center">{{ item.name }}</h5>
+                            <div class="d-flex justify-content-center mt-2">
+                                {% if item.status == 'claimed' %}
+                                    <span class="badge bg-success">Claimed</span>
+                                {% elif item.status == 'closed' %}
+                                    <span class="badge bg-secondary">Closed</span>
+                                {% else %}
+                                    <span class="badge bg-primary">Open</span>
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="p-3 bg-light border-top mt-auto d-flex flex-column">
                             <a href="{% url 'found_item_detail' item.id %}" class="btn btn-info w-100 mb-2">View</a>
-                            <a href="{% url 'edit_found_item' item.id %}" class="btn btn-warning w-100 mb-2">Edit</a>
-                            <form action="{% url 'close_found_item' item.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger w-100">Close</button>
-                            </form>
+                            {% if item.status != 'claimed' %}
+                                <a href="{% url 'edit_found_item' item.id %}" class="btn btn-warning w-100 mb-2">Edit</a>
+                                <form action="{% url 'close_found_item' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger w-100">Close</button>
+                                </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

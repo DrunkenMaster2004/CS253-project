@@ -3,19 +3,29 @@
 {% block title %}Claim Item{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4">Claim Item</h2>
-    <p>If you believe this item belongs to you, please provide details to verify your ownership.</p>
-    
-    <form method="post" class="mt-3">
-        {% csrf_token %}
-        
-        <div class="mb-3">
-            <label class="form-label">Describe why this item is yours:</label>
-            <textarea name="claim_details" class="form-control" rows="3" required></textarea>
-        </div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Claim Item</h2>
+                </div>
+                <div class="card-body">
+                    <p>If you believe this item belongs to you, please provide details to verify your ownership.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-3">
+                            <label for="id_claim_details" class="form-label">Describe why this item is yours:</label>
+                            <textarea name="proof_details" id="id_claim_details" class="form-control" rows="3" required></textarea>
+                        </div>
 
-        <button type="submit" class="btn btn-primary">Submit Claim</button>
-    </form>
+                        <button type="submit" class="btn btn-success w-100">Submit Claim</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

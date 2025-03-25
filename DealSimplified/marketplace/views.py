@@ -155,10 +155,15 @@ def item_detail(request, item_id):
     item.views += 1
     item.save()
     
+    is_seller = False
     in_wishlist = False
+    
     if request.user.is_authenticated:
         profile = Profile.objects.get(user=request.user)
-        in_wishlist = Wishlist.objects.filter(user=profile, item=item).exists()
+        is_seller = item.seller.user == request.user
+        
+        if not is_seller:
+            in_wishlist = Wishlist.objects.filter(user=profile, item=item).exists()
     
     similar_items = Item.objects.filter(
         category=item.category, 
@@ -168,7 +173,8 @@ def item_detail(request, item_id):
     context = {
         'item': item,
         'similar_items': similar_items,
-        'in_wishlist': in_wishlist
+        'in_wishlist': in_wishlist,
+        'is_seller': is_seller
     }
     return render(request, 'marketplace/item_detail.html', context)
 

@@ -14,14 +14,13 @@
             <p class="card-text"><strong>Category:</strong> {{ item.category }}</p>
             <p class="card-text"><strong>Views:</strong> {{ item.views }}</p>
 
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and not is_seller %}
                 {% if in_wishlist %}
                     <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-warning">Remove from Wishlist</a>
                 {% else %}
                     <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-primary">Add to Wishlist</a>
-                {% endif %}
+                 {% endif %}
                 <a href="{% url 'start_chat_item' item.id %}" class="btn btn-info">Chat with Seller</a>
-
             {% endif %}
         </div>
     </div>

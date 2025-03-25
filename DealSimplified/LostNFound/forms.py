@@ -16,7 +16,7 @@ class LostItemForm(forms.ModelForm):
             'additional_details': forms.Textarea(attrs={'rows': 3}),
             'lost_date': forms.DateInput(attrs={'type': 'date'}),
         }
-
+l
 class FoundItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(
         queryset=LostFoundCategory.objects.all(),  # Load all categories dynamically

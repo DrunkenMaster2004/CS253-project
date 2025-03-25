@@ -17,11 +17,6 @@
         <img src="{{ item.images.first.url }}" alt="{{ item.name }}" class="img-fluid rounded" style="max-width: 400px;">
     {% endif %}
 
-    {% comment %} {% if user.is_authenticated and user != item.reporter.user %}
-        <a href="{% url 'start_chat' item.reporter.user.id %}" class="btn btn-primary">
-            Chat with Reporter
-        </a>
-    {% endif %} {% endcomment %}
     {% if user.is_authenticated %}
      <div class="mt-3">
          <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-primary">Start Chat</a>

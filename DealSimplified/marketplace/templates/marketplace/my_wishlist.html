@@ -1,32 +1,80 @@
 {% extends "marketplace/base.html" %}
-
 {% block content %}
-<h2>My Wishlist</h2>
-<ul>
-    {% for wishlist_item in wishlist_items %}
-        <li>
-            <a href="{% url 'item_detail' wishlist_item.item.id %}">{{ wishlist_item.item.name }}</a>
-            <button onclick="toggleWishlist({{ wishlist_item.item.id }})">Remove from Wishlist</button>
-        </li>
-    {% empty %}
-        <li>No items in your wishlist.</li>
-    {% endfor %}
-</ul>
+<div class="container wishlist-container">
+    <h1 class="page-title">My Wishlist</h1>
+    
+    {% if wishlist_items %}
+        <div class="wishlist-grid">
+            {% for wishlist_item in wishlist_items %}
+                <div class="wishlist-item" data-item-id="{{ wishlist_item.item.id }}">
+                    <div class="wishlist-item-details">
+                        <img src="{{ wishlist_item.item.image.url }}" alt="{{ wishlist_item.item.name }}" class="wishlist-item-image">
+                        <div class="wishlist-item-info">
+                            <h3>{{ wishlist_item.item.name }}</h3>
+                            <p>Price: ${{ wishlist_item.item.price|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger remove-wishlist-btn" data-item-id="{{ wishlist_item.item.id }}">
+                        Remove from Wishlist
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-wishlist">
+            <p>No items in your wishlist.</p>
+            <a href="{% url 'product_list' %}" class="btn btn-primary">Continue Shopping</a>
+        </div>
+    {% endif %}
+</div>
 
 <script>
-    function toggleWishlist(itemId) {
-        fetch(`/wishlist/toggle/${itemId}/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            location.reload();
+document.addEventListener('DOMContentLoaded', function() {
+    const removeButtons = document.querySelectorAll('.remove-wishlist-btn');
+    
+    removeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            
+            fetch(`/marketplace/wishlist/toggle/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Remove the item from the DOM
+                    const wishlistItem = this.closest('.wishlist-item');
+                    wishlistItem.remove();
+                    
+                    // If no items left, show empty wishlist message
+                    const wishlistGrid = document.querySelector('.wishlist-grid');
+                    if (!wishlistGrid || wishlistGrid.children.length === 0) {
+                        document.querySelector('.wishlist-container').innerHTML = `
+                            <div class="empty-wishlist">
+                                <p>No items in your wishlist.</p>
+                                <a href="{% url 'product_list' %}" class="btn btn-primary">Continue Shopping</a>
+                            </div>
+                        `;
+                    }
+                } else {
+                    alert(data.message || 'Failed to remove item from wishlist');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to remove item from wishlist');
+            });
         });
-    }
+    });
+});
 </script>
-
 {% endblock %}

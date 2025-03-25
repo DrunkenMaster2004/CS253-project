@@ -520,27 +520,62 @@ def find_potential_matches_for_found(found_item):
             )
 @login_required
 def start_chat_lostfound(request, item_id):
-    item = get_object_or_404(LostItem, id=item_id)
-    profile = Profile.objects.get(user=request.user)
+    # item = get_object_or_404(LostItem, id=item_id)
+    # profile = Profile.objects.get(user=request.user)
 
-    # Create or retrieve existing chat between the logged-in user and the item's reporter
-    chat, created = Chat.objects.get_or_create(
-        sender=profile,
-        receiver=item.reporter,
-    )
+    # # Create or retrieve existing chat between the logged-in user and the item's reporter
+    # chat, created = Chat.objects.get_or_create(
+    #     sender=profile,
+    #     receiver=item.reporter,
+    # )
     
-    # Create notification for the item reporter about new chat
-    if created:
-        Notification.objects.create(
-            recipient=item.reporter,
-            sender=profile,
-            notification_type='chat',
-            lost_item=item,
-            message=f"{profile.user.username} has started a chat with you about your lost item: {item.name}"
-        )
+    # # Create notification for the item reporter about new chat
+    # if created:
+    #     Notification.objects.create(
+    #         recipient=item.reporter,
+    #         sender=profile,
+    #         notification_type='chat',
+    #         lost_item=item,
+    #         message=f"{profile.user.username} has started a chat with you about your lost item: {item.name}"
+    #     )
+
+    # # Redirect to the chat detail page
+    # return redirect('chat_detail', chat.id)
+    try:
+        item = LostItem.objects.get(id=item_id)
+    except LostItem.DoesNotExist:
+        try:
+            item = FoundItem.objects.get(id=item_id)
+        except FoundItem.DoesNotExist:
+            messages.error(request, "Item not found.")
+            return redirect('lostnfound_home')
+    
+    profile = Profile.objects.get(user=request.user)
+    
+    # Don't create chat with yourself
+    if profile == item.reporter:
+        messages.warning(request, "You cannot start a chat with yourself.")
+        return redirect('lostnfound_home')
+
+    # Check if chat exists in either direction
+    existing_chat = Chat.objects.filter(
+        (Q(sender=profile) & Q(receiver=item.reporter)) |
+        (Q(sender=item.reporter) & Q(receiver=profile))
+    ).first()
+
+    if existing_chat:
+        return redirect('chat_detail', chat_id=existing_chat.id)
+
+    # Create new chat only if one doesn't exist
+    chat = Chat.objects.create(
+        sender=profile,
+        receiver=item.reporter
+    )
 
     # Redirect to the chat detail page
-    return redirect('chat_detail', chat.id)
+    return redirect('chat_detail', chat_id=chat.id)
+
+
 
 
 from django.shortcuts import render

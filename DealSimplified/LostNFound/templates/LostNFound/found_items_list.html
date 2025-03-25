@@ -34,10 +34,16 @@
                         <div class="p-3 bg-light border-top mt-auto d-flex justify-content-center gap-2">
                             <a href="{% url 'found_item_detail' item.id %}" class="btn btn-info flex-fill">View Details</a>
                             
-                            {% if user.is_authenticated and user != item.reporter.user and item.status == 'open' %}
+                            {% if user.is_authenticated %}
                                 <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-primary flex-fill">
                                     Start Chat
                                 </a>
+                                {% else %}
+                                    <a href="{% url 'login' %}" class="btn btn-secondary ms-2">
+                                         Log in to Chat
+                                    </a>
+                                {% endif %}
+                            {% if user.is_authenticated and user != item.reporter.user and item.status == 'open' %}
                                 <a href="{% url 'claim_found_item' item.id %}" class="btn btn-success flex-fill">
                                     Claim Item
                                 </a>

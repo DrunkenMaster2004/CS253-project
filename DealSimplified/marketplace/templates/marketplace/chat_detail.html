@@ -51,10 +51,12 @@
         }
         .chat-message.me {
             background-color: #e1ffc7;
-            align-self: flex-end;
+            align-self: flex-start;
+            margin-left: auto;
         }
         .chat-message.other {
             background-color: #f0f0f0;
+            align-self: flex-end;
         }
         .chat-input {
             display: flex;
@@ -67,6 +69,58 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .date-separator {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            background-color: #f0f0f0;
+            padding: 5px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .chat-message {
+            position: relative;
+            max-width: 60%;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+        .date-divider {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #777;
+            background: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .me {
+            background-color: #e1ffc7;
+            align-self: flex-end;
+            text-align: right;
+        }
+        
+        .other {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+            text-align: left;
+        }
+        
+         .time-stamp {
+            font-size: 12px;
+            color: #555;
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+        } 
+
+
         button {
             padding: 10px 15px;
             margin-left: 10px;
@@ -78,6 +132,31 @@
         }
         button:hover {
             background-color: #45a049;
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f0f0f0; /* Light gray like WhatsApp */
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        
+        .chat-header .chat-title {
+            flex-grow: 1;
+        }
+        
+        .chat-header .chat-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-header .chat-options i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #555;
         }
     </style>
 </head>
@@ -107,12 +186,42 @@
 
     <!-- Chat Window on the Right -->
     <div class="chat-window">
+        <div class="chat-header">
+            
+            <div class="chat-title">
+                {% if chat.sender == profile %}
+                    {{ chat.receiver.user.username }}
+                {% else %}
+                    {{ chat.sender.user.username }}
+                {% endif %}
+            </div>
+            <div class="chat-options">
+                <i class="fa fa-phone"></i>
+                <i class="fa fa-video"></i>
+                <i class="fa fa-search"></i>
+            </div>
+        </div>
         <div class="chat-messages">
-            {% for message in messages %}
+            {% comment %} {% for message in messages %}
                 <div class="chat-message {% if message.sender == profile %}me{% else %}other{% endif %}">
                     <p>{{ message.content }}</p>
                 </div>
-            {% endfor %}
+            {% endfor %} {% endcomment %}
+            {% regroup messages by timestamp.date as messages_by_date %}
+
+                {% for date_group in messages_by_date %}
+                    <!-- Display Date Heading -->
+                    <div class="date-separator">
+                        <span>{{ date_group.grouper|date:"d M Y" }}</span>
+                    </div>
+            
+                    {% for message in date_group.list %}
+                        <div class="chat-message {% if message.sender == profile %}me{% else %}other{% endif %}">
+                            <p>{{ message.content }}</p>
+                            <small class="time-stamp">{{ message.timestamp|date:"H:i" }}</small>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
         </div>
 
         <form method="POST" class="chat-input">

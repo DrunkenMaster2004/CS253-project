@@ -24,7 +24,7 @@
                         </div>
                         <div class="p-3 bg-light border-top mt-auto d-flex justify-content-center">
                             <a href="{% url 'lost_item_detail' item.id %}" class="btn btn-info w-100">View Details</a>
-                           {% if user.is_authenticated and user != item.reporter.user %}
+                           {% if user.is_authenticated  %}
                                 <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-primary ms-2">
                                     Start Chat
                                 </a>

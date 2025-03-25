@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -95,12 +96,13 @@ class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=now)
     is_read = models.BooleanField(default=False)
     
+    # def __str__(self):
+    #     return f"Message from {self.sender.name} at {self.timestamp}"
     def __str__(self):
-        return f"Message from {self.sender.name} at {self.timestamp}"
-
+        return f"{self.sender.user.username}: {self.content[:20]} ({self.timestamp.strftime('%Y-%m-%d %H:%M')})"
 
 
 @receiver(post_save, sender=User)

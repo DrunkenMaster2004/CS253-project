@@ -10,7 +10,7 @@ class LostItemForm(forms.ModelForm):
 
     class Meta:
         model = LostItem
-        fields = ['name', 'description', 'category', 'lost_location', 'lost_date', 'color', 'additional_details', 'reward']
+        fields = ['name', 'description', 'category', 'lost_location', 'lost_date', 'color', 'additional_details']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'additional_details': forms.Textarea(attrs={'rows': 3}),

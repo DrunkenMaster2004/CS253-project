@@ -330,12 +330,17 @@ def start_chat(request, item_id=None, profile_id=None):
 @login_required
 def chat_list(request):
     profile = Profile.objects.get(user=request.user)
-    
+
     chats = Chat.objects.filter(
         Q(sender=profile) | Q(receiver=profile)
     ).order_by('-created_at')
-    
+
+    # Add last message to each chat
+    for chat in chats:
+        chat.last_message = chat.messages.order_by('-timestamp').first()
+
     return render(request, 'marketplace/chat_list.html', {'chats': chats})
+
 
 # @login_required
 # def chat_detail(request, chat_id):

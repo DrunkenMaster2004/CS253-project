@@ -23,22 +23,24 @@ def home(request):
     }
     return render(request, 'LostNFound/home.html', context)
 
+
 @login_required
 def report_lost_item(request):
     if request.method == 'POST':
         form = LostItemForm(request.POST)
         if form.is_valid():
             lost_item = form.save(commit=False)
-            profile = Profile.objects.get(user=request.user)
-            lost_item.reporter = profile
+            lost_item.reporter = Profile.objects.get(user=request.user)
             lost_item.save()
-            
+
             image_formset = LostItemImageFormSet(request.POST, request.FILES, instance=lost_item)
             if image_formset.is_valid():
-                image_formset.save()
+                # Save only non-empty images
+                for form in image_formset:
+                    if form.cleaned_data.get('image'):
+                        form.save()
                 
                 find_potential_matches(lost_item)
-                
                 messages.success(request, 'Your lost item has been reported!')
                 return redirect('lost_item_detail', item_id=lost_item.id)
             else:
@@ -47,7 +49,7 @@ def report_lost_item(request):
     else:
         form = LostItemForm()
         image_formset = LostItemImageFormSet()
-    
+
     return render(request, 'LostNFound/report_lost_item.html', {
         'form': form,
         'image_formset': image_formset
@@ -59,16 +61,17 @@ def report_found_item(request):
         form = FoundItemForm(request.POST)
         if form.is_valid():
             found_item = form.save(commit=False)
-            profile = Profile.objects.get(user=request.user)
-            found_item.reporter = profile
+            found_item.reporter = Profile.objects.get(user=request.user)
             found_item.save()
-            
+
             image_formset = FoundItemImageFormSet(request.POST, request.FILES, instance=found_item)
             if image_formset.is_valid():
-                image_formset.save()
+                # Save only non-empty images
+                for form in image_formset:
+                    if form.cleaned_data.get('image'):
+                        form.save()
                 
                 find_potential_matches_for_found(found_item)
-                
                 messages.success(request, 'Your found item has been reported!')
                 return redirect('found_item_detail', item_id=found_item.id)
             else:
@@ -77,11 +80,12 @@ def report_found_item(request):
     else:
         form = FoundItemForm()
         image_formset = FoundItemImageFormSet()
-    
+
     return render(request, 'LostNFound/report_found_item.html', {
         'form': form,
         'image_formset': image_formset
     })
+
 
 def lost_item_detail(request, item_id):
     lost_item = get_object_or_404(LostItem, id=item_id)

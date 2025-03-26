@@ -12,19 +12,15 @@
     <p><strong>Reported On:</strong> {{ item.date_reported|date:"F d, Y" }}</p>
     <p><strong>Description:</strong> {{ item.description|default:"No description added" }}</p>
     
-    {% if item.image %}
-        <p><strong>Image:</strong></p>
-        <img src="{{ item.images.first.url }}" alt="{{ item.name }}" class="img-fluid rounded" style="max-width: 400px;">
+    {% if item.images.all %}
+        <div class="row">
+            {% for image in item.images.all|slice:":3" %}
+                <div class="col-md-4">
+                    <h5>Image {{ forloop.counter }}</h5>
+                    <img src="{{ image.url }}" alt="Found Item Image {{ forloop.counter }}" class="img-fluid rounded" style="max-width: 100%;">
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-
-    {% if user.is_authenticated %}
-     <div class="mt-3">
-         <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-primary">Start Chat</a>
-     </div>
-    {% else %}
-     <div class="mt-3">
-         <a href="{% url 'login' %}" class="btn btn-secondary">Log in to Chat</a>
-     </div>
- {% endif %}
 </div>
 {% endblock %}

@@ -3,22 +3,18 @@
 {% block title %}Lost & Found{% endblock %}
 
 {% block content %}
+<div class="container text-center">
+    <h1 class="mt-4">Welcome to Lost & Found</h1>
+    <p class="mb-4">Report lost items, view found items, and claim your belongings.</p>
 
-<div class="container d-flex flex-column align-items-center justify-content-center text-center" style="height: 80vh;">
-    <div class="hero-content p-5 rounded-4" style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); max-width: 600px;">
-        <h1 class="hero-title fw-bold">Welcome to Lost & Found</h1>
-        <div class="container text-center">
-            <p>Report lost items, view found items, and claim your belongings.</p>
-            <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
-                <a href="{% url 'report_lost_item' %}" class="btn btn-custom btn-report-lost">Report Lost Item</a>
-                <a href="{% url 'report_found_item' %}" class="btn btn-custom btn-report-found">Report Found Item</a>
-            </div>
-        
-            <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
-                <a href="{% url 'lost_items_list' %}" class="btn btn-custom btn-browse-lost">Browse Lost Items</a>
-                <a href="{% url 'found_items_list' %}" class="btn btn-custom btn-browse-found">Browse Found Items</a>
-            </div>
-        </div>
+    <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
+        <a href="{% url 'report_lost_item' %}" class="btn btn-danger btn-lg px-4">Report Lost Item</a>
+        <a href="{% url 'report_found_item' %}" class="btn btn-success btn-lg px-4">Report Found Item</a>
+    </div>
+
+    <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
+        <a href="{% url 'lost_items_list' %}" class="btn btn-primary btn-lg px-4">Browse Lost Items</a>
+        <a href="{% url 'found_items_list' %}" class="btn btn-info btn-lg px-4">Browse Found Items</a>
     </div>
 </div>
 {% endblock %}

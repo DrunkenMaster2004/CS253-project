@@ -4,16 +4,48 @@
 {% block title %}Add Item - DealSimplified{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mb-4">Add New Item</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        {{ image_formset.management_form }}
-        {% for form in image_formset %}
-            {{ form|crispy }}
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<head>
+    <style>
+        .btn-custom {
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: all 0.3s ease-in-out;
+            display: inline-block;
+            text-align: center;
+            background-color: #E67E22;
+            color: white;
+            box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<div class="container d-flex justify-content-center">
+    <div class="card shadow-lg border-0 rounded-4 p-4 mb-4" style="max-width: 600px; width: 100%; background: linear-gradient(to right, #ffffff, #f8f9fa);">
+        <h2 class="text-center mb-4 fw-semibold">Add New Item</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form|crispy }}
+            </div>
+            <div class="mb-3">
+                {{ image_formset.management_form }}
+                {% for form in image_formset %}
+                    {{ form|crispy }}
+                {% endfor %}
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-custom px-4 py-2 rounded-pill shadow-sm transition">
+                    <i class="fas fa-plus-circle me-2"></i> Submit
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
 {% endblock %}

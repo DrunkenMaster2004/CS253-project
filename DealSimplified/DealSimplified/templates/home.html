@@ -3,13 +3,15 @@
 {% block title %}Welcome to DealSimplified{% endblock %}
 
 {% block content %}
-<div class="container text-center">
-    <h1 class="mt-4">Welcome to DealSimplified</h1>
-    <p>Explore the marketplace and Lost & Found sections.</p>
-
-    <div class="d-flex justify-content-center gap-3 mt-3">
-        <a href="{% url 'marketplace_home' %}" class="btn btn-primary btn-lg">Go to Marketplace</a>
-        <a href="{% url 'lostnfound_home' %}" class="btn btn-info btn-lg">Go to Lost & Found</a>
+<div class="container d-flex flex-column align-items-center justify-content-center text-center" style="height: 80vh;">
+    <div class="hero-content p-5 rounded-4" style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); max-width: 600px;">
+        <h1 class="hero-title fw-bold" >Welcome to DealSimplified</h1>
+        <p class="hero-text text-muted">Explore the Marketplace and Lost & Found sections.</p>
+        <div class="d-flex justify-content-center gap-4 mt-4">
+            <a href="{% url 'marketplace_home' %}" class="btn btn-lost btn-custom px-4 py-2">Go to Marketplace</a>
+            <a href="{% url 'lostnfound_home' %}" class="btn btn-found btn-custom px-4 py-2">Go to Lost & Found</a>
+        </div>
     </div>
 </div>
 {% endblock %}
+

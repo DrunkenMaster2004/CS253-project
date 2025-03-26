@@ -1,6 +1,6 @@
 from django import forms
 from .models import LostItem, FoundItem, ItemImage, Claim, LostFoundCategory
-
+from django.forms import BaseInlineFormSet
 class LostItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(
         queryset=LostFoundCategory.objects.all(),  # Load all categories dynamically
@@ -10,7 +10,7 @@ class LostItemForm(forms.ModelForm):
 
     class Meta:
         model = LostItem
-        fields = ['name', 'description', 'category', 'lost_location', 'lost_date', 'color', 'additional_details', 'reward']
+        fields = ['name', 'description', 'category', 'lost_location', 'lost_date', 'color', 'additional_details']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'additional_details': forms.Textarea(attrs={'rows': 3}),
@@ -38,13 +38,23 @@ class ItemImageForm(forms.ModelForm):
         model = ItemImage
         fields = ['image']
 
+class RequiredInlineFormSet(BaseInlineFormSet):
+    """Auto-remove empty image forms"""
+    def clean(self):
+        super().clean()
+        self.forms = [form for form in self.forms if form.cleaned_data.get('image')]
+
 LostItemImageFormSet = forms.inlineformset_factory(
-    LostItem, ItemImage, form=ItemImageForm, extra=3, fk_name='lost_item'
+    LostItem, ItemImage, form=ItemImageForm, extra=3, fk_name='lost_item',
+    formset=RequiredInlineFormSet
 )
 
 FoundItemImageFormSet = forms.inlineformset_factory(
-    FoundItem, ItemImage, form=ItemImageForm, extra=3, fk_name='found_item'
+    FoundItem, ItemImage, form=ItemImageForm, extra=3, fk_name='found_item',
+    formset=RequiredInlineFormSet
 )
+
+
 
 class ClaimForm(forms.ModelForm):
     class Meta:

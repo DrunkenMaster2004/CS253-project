@@ -25,7 +25,6 @@ class LostItem(models.Model):
     lost_date = models.DateField()
     color = models.CharField(max_length=50)
     additional_details = models.TextField(blank=True)
-    reward = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     date_reported = models.DateTimeField(auto_now_add=True)
     

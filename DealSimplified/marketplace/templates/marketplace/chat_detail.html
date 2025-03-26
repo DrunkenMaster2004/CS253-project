@@ -1,77 +1,77 @@
 {% extends 'marketplace/base.html' %}
 
-{% block title %} Chats {% endblock %}
+{% block title %}Chats - DealSimplified{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Left Sidebar: Chat List -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4 p-3">
+                <h3 class="fw-semibold text-center">My Chats</h3>
+                <div class="list-group">
+                    {% for chat in chats %}
+                        <a href="{% url 'chat_detail' chat.id %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <strong>
+                                    {% if chat.sender == profile %}
+                                        {{ chat.receiver.user.username }}
+                                    {% else %}
+                                        {{ chat.sender.user.username }}
+                                    {% endif %}
+                                </strong>
+                                <p class="text-muted small mb-0">{{ chat.messages.last.content|truncatechars:30 }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
-<div class="chat-container">
-    <!-- Left Sidebar with Chats -->
-    <div class="sidebar">
-        <h3>My Chats</h3>
-        {% for chat in chats %}
-            <div class="sidebar-chat">
-                <a href="{% url 'chat_detail' chat.id %}">
-                    {% comment %} <strong>Chat with {{ chat.receiver.user.username }}</strong><br>
-                    <small>{{ chat.messages.last.content|truncatechars:30 }}</small> {% endcomment %}
-                    <strong>
+        <!-- Chat Window -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-4 p-3">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
                         {% if chat.sender == profile %}
                             {{ chat.receiver.user.username }}
                         {% else %}
                             {{ chat.sender.user.username }}
                         {% endif %}
-                    </strong><br>
-                    <small>{{ chat.messages.last.content|truncatechars:30 }}</small>
-                </a>
-            </div>
-        {% endfor %}
-    </div>
-
-    <!-- Chat Window on the Right -->
-    <div class="chat-window">
-        <div class="chat-header">
-            
-            <div class="chat-title">
-                {% if chat.sender == profile %}
-                    {{ chat.receiver.user.username }}
-                {% else %}
-                    {{ chat.sender.user.username }}
-                {% endif %}
-            </div>
-            <div class="chat-options">
-                <i class="fa fa-phone"></i>
-                <i class="fa fa-video"></i>
-                <i class="fa fa-search"></i>
-            </div>
-        </div>
-        <div class="chat-messages">
-            {% comment %} {% for message in messages %}
-                <div class="chat-message {% if message.sender == profile %}me{% else %}other{% endif %}">
-                    <p>{{ message.content }}</p>
-                </div>
-            {% endfor %} {% endcomment %}
-            {% regroup messages by timestamp.date as messages_by_date %}
-
-                {% for date_group in messages_by_date %}
-                    <!-- Display Date Heading -->
-                    <div class="date-separator">
-                        <span>{{ date_group.grouper|date:"d M Y" }}</span>
+                    </h5>
+                    <div>
+                        <i class="fa fa-phone me-3 text-secondary"></i>
+                        <i class="fa fa-video me-3 text-secondary"></i>
+                        <i class="fa fa-search text-secondary"></i>
                     </div>
-            
-                    {% for message in date_group.list %}
-                        <div class="chat-message {% if message.sender == profile %}me{% else %}other{% endif %}">
-                            <p>{{ message.content }}</p>
-                            <small class="time-stamp">{{ message.timestamp|date:"H:i" }}</small>
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-        </div>
+                </div>
 
-        <form method="POST" class="chat-input">
-            {% csrf_token %}
-            <input type="text" name="content" placeholder="Type a message...">
-            <button type="submit">Send</button>
-        </form>
+                <div class="card-body chat-messages overflow-auto" style="max-height: 400px;">
+                    {% regroup messages by timestamp.date as messages_by_date %}
+                    {% for date_group in messages_by_date %}
+                        <div class="text-center my-2">
+                            <small class="text-muted">{{ date_group.grouper|date:"d M Y" }}</small>
+                        </div>
+                        {% for message in date_group.list %}
+                            <div class="d-flex {% if message.sender == profile %}justify-content-end{% else %}justify-content-start{% endif %} mb-2">
+                                <div class="p-2 rounded-3 {% if message.sender == profile %}bg-primary text-white{% else %}bg-light{% endif %}">
+                                    <p class="mb-1">{{ message.content }}</p>
+                                    <small class="d-block text-end text-muted">{{ message.timestamp|date:"H:i" }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+
+                <div class="card-footer bg-light">
+                    <form method="POST" class="d-flex">
+                        {% csrf_token %}
+                        <input type="text" name="content" class="form-control me-2" placeholder="Type a message..." required>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
 {% endblock %}

@@ -5,11 +5,64 @@
 {% block title %}Marketplace - Browse Items{% endblock %}
 
 {% block content %}
+<head>
+    <style>
+        .btn-custom {
+            background-color:  #E67E22; 
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: center;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+        }
+        
+        .btn-custom:hover {
+            background-color: #E65C00; 
+            color: white;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+            background: white;
+            padding: 15px;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .card-title {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .card-price {
+            color: rgba(0, 128, 0, 0.721);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .filter-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+    
 <div class="container mt-4">
-    <h2 class="text-center fw-bold text-primary">Browse Items</h2>
+    <h2 class="text-center fw-bold text-custom">Browse Items</h2>
 
     <!-- Filter Form -->
-    <form method="GET" class="mb-4">
+    <form method="GET" class="mb-4 p-3 bg-light shadow-sm rounded">
         <div class="row g-3">
             <div class="col-md-3">
                 <label class="form-label fw-bold">Category</label>
@@ -35,7 +88,7 @@
                 <input type="text" name="q" class="form-control" placeholder="Search items..." value="{{ query }}">
             </div>
             <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100"><i class="fa fa-search"></i> Filter</button>
+                <button type="submit" class="btn btn-custom w-100"><i class="fa fa-search"></i> Filter</button>
             </div>
         </div>
     </form>
@@ -43,13 +96,13 @@
     <!-- Items Grid -->
     <div class="row">
         {% for item in items %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
-                        <h5 class="card-title">{{ item.name }}</h5>
-                        <p class="text-success fw-bold">₹{{ item.price }}</p>
-                        <a href="{% url 'item_detail' item.id %}" class="btn btn-sm btn-primary">View Item</a>
+                        <h5 class="card-title fw-bold">{{ item.name }}</h5>
+                        <p class="text-success fw-bold fs-5">₹{{ item.price }}</p>
+                        <a href="{% url 'item_detail' item.id %}" class="btn btn-sm btn-custom text-white fw-bold">View Item</a>
                     </div>
                 </div>
             </div>

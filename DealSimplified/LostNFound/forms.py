@@ -1,5 +1,5 @@
 from django import forms
-from .models import LostItem, FoundItem, ItemImage, Claim, LostFoundCategory
+from .models import LostItem, FoundItem, ItemImage, Claim, LostFoundCategory, AutoDeleteEmptyFormSet
 from django.forms import BaseInlineFormSet
 class LostItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(
@@ -46,13 +46,16 @@ class RequiredInlineFormSet(BaseInlineFormSet):
 
 LostItemImageFormSet = forms.inlineformset_factory(
     LostItem, ItemImage, form=ItemImageForm, extra=3, fk_name='lost_item',
-    formset=RequiredInlineFormSet
+    formset=AutoDeleteEmptyFormSet
 )
 
 FoundItemImageFormSet = forms.inlineformset_factory(
     FoundItem, ItemImage, form=ItemImageForm, extra=3, fk_name='found_item',
-    formset=RequiredInlineFormSet
+    formset=AutoDeleteEmptyFormSet
 )
+from django.forms import BaseInlineFormSet
+
+
 
 
 

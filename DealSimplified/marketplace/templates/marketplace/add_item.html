@@ -34,9 +34,17 @@
                 {{ form|crispy }}
             </div>
             <div class="mb-3">
-                {{ image_formset.management_form }}
                 {% for form in image_formset %}
-                    {{ form|crispy }}
+                    <div class="border p-2 rounded mb-2" style="background-color: #f8f9fa;">
+                        {{ form.image.label_tag }} {{ form.image }}
+            
+                        {% if form.instance.pk %}  <!-- Show 'Delete' option only if image exists -->
+                            <div class="form-check mt-2">
+                                {{ form.DELETE }}
+                                <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">Delete</label>
+                            </div>
+                        {% endif %}
+                    </div>
                 {% endfor %}
             </div>
             <div class="text-center mt-3">

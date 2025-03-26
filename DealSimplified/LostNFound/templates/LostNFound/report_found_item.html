@@ -3,18 +3,35 @@
 {% block title %}Report Found Item{% endblock %}
 
 {% block content %}
-    <h2>Report a Found Item</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-    
-        {{ form.as_p }}
-    
-        <h3>Upload Images</h3>
-        {{ image_formset.management_form }}
-        {% for form in image_formset %}
-            {{ form.as_p }}
-        {% endfor %}
-    
-        <button type="submit">Submit</button>
-    </form>
+<div class="container d-flex justify-content-center mt-4">
+    <div class="card shadow-lg p-4" style="width: 40rem; border-radius: 12px;">
+        <h2 class="text-center mb-4 fw-bold" style="color: #333;">Report a Found Item</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+
+            <h4 class="mt-3 fw-semibold" style="color: #444;">Upload Images</h4>
+            {{ image_formset.management_form }}
+            
+            <div class="mb-3">
+                {% for form in image_formset %}
+                <div>
+                    {{ form.image.label_tag }} {{ form.image }}
+                    {% if form.instance.pk %} <!-- Only show 'Delete' for existing images -->
+                        {{ form.DELETE.label_tag }} {{ form.DELETE }}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="submit" class="btn btn-dark w-100" style="border-radius: 8px;">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock %}

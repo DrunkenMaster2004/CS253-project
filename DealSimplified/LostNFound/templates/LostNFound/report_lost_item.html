@@ -19,9 +19,12 @@
             
             <div class="mb-3">
                 {% for form in image_formset %}
-                    <div class="mb-2 p-2 border rounded bg-light">
-                        {{ form.as_p }}
-                    </div>
+                <div>
+                    {{ form.image.label_tag }} {{ form.image }}
+                    {% if form.instance.pk %} <!-- Only show 'Delete' for existing images -->
+                        {{ form.DELETE.label_tag }} {{ form.DELETE }}
+                    {% endif %}
+                </div>
                 {% endfor %}
             </div>
             

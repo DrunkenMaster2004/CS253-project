@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Item, ItemImage, ItemCategory
+from .models import Profile, Item, ItemImage, ItemCategory, AutoDeleteEmptyFormSet
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -37,5 +37,5 @@ class ItemImageForm(forms.ModelForm):
         fields = ['image']
 
 ItemImageFormSet = forms.inlineformset_factory(
-    Item, ItemImage, form=ItemImageForm, extra=3
+    Item, ItemImage, form=ItemImageForm, extra=3, formset=AutoDeleteEmptyFormSet
 )

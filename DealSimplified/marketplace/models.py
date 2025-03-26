@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+from django.forms.models import BaseInlineFormSet
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -84,12 +85,6 @@ class Chat(models.Model):
     
     def __str__(self):
         return f"Chat between {self.sender.name} and {self.receiver.name}"
-# class Message(models.Model):
-#     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
-#     sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
-#     content = models.TextField()  # This might be renamed to `text` by accident
-#     is_read = models.BooleanField(default=False)
-#     timestamp = models.DateTimeField(auto_now_add=True)
 
 
 class Message(models.Model):
@@ -113,9 +108,11 @@ class ChatThread(models.Model):
     participants = models.ManyToManyField(User)
 
 
+class AutoDeleteEmptyFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        # Automatically mark empty forms for deletion
+        for form in self.forms:
+            if not form.cleaned_data.get('image'):
+                form.cleaned_data['DELETE'] = True
 
-# class Message(models.Model):
-#     thread = models.ForeignKey(ChatThread, related_name='messages', on_delete=models.CASCADE)
-#     sender = models.ForeignKey(User, on_delete=models.CASCADE)
-#     text = models.TextField()
-#     timestamp = models.DateTimeField(auto_now_add=True)p

@@ -33,10 +33,13 @@
             <div class="mb-3">
                 {{ form|crispy }}
             </div>
+            
+            {{ image_formset.management_form }}      <!-- ✅ FIX: Ensure formset is properly handled -->
+
             <div class="mb-3">
                 {% for form in image_formset %}
                     <div class="border p-2 rounded mb-2" style="background-color: #f8f9fa;">
-                        {{ form.image.label_tag }} {{ form.image }}
+                        {{ form.as_p }}              <!-- ✅ FIX: Render entire form properly -->
             
                         {% if form.instance.pk %}  <!-- Show 'Delete' option only if image exists -->
                             <div class="form-check mt-2">

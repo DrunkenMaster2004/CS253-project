@@ -114,5 +114,17 @@ class AutoDeleteEmptyFormSet(BaseInlineFormSet):
         # Automatically mark empty forms for deletion
         for form in self.forms:
             if not form.cleaned_data.get('image'):
-                form.cleaned_data['DELETE'] = True
+                form.cleaned_data['DELETE'] = True 
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.item.name} in {self.user.username}'s cart"
+
+    def get_total_price(self):
+        return self.quantity * self.item.price
 

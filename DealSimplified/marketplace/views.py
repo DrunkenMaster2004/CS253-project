@@ -5,6 +5,9 @@ from django.db.models import Q
 from django.http import JsonResponse
 from .models import Item, ItemCategory, Profile, Wishlist, Chat, Message, ChatThread
 from .forms import UserRegisterForm, ProfileForm, ItemForm, ItemImageFormSet
+from .models import Cart
+from django.shortcuts import render
+
 
 
 def home(request):
@@ -402,4 +405,58 @@ def chat_detail(request, chat_id):
         'profile': profile,
         'chats': chats,
     })
+ 
+ # Cart Functionality
+
+@login_required
+def cart_view(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "You need to log in to view your cart.")
+        return redirect('login')  # Redirect to login page
+
+    cart_items = Cart.objects.filter(user=request.user)
+    total_price = sum(item.get_total_price() for item in cart_items)
+
+    return render(request, 'marketplace/cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    })
+
+@login_required
+def add_to_cart(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    cart_item, created = Cart.objects.get_or_create(user=request.user, item=item)
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    messages.success(request, f'{item.name} added to your cart!')
+    return redirect('cart')
+
+
+@login_required
+def update_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+
+    if request.method == 'POST':
+        new_quantity = max(int(request.POST.get('quantity', 1)), 1)  # Ensures quantity is at least 1
+        if new_quantity > 0:
+            cart_item.quantity = new_quantity
+            cart_item.save()
+            messages.success(request, 'Cart updated successfully!')
+
+    return redirect('cart')
+
+
+@login_required
+def remove_from_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+    cart_item.delete()
+    messages.success(request, 'Item removed from cart.')
+    return redirect('cart')
+
+@login_required
+def checkout(request):
+    return render(request, 'marketplace/checkout.html')
 

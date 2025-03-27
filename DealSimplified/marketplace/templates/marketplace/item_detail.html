@@ -62,7 +62,17 @@
                         <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-custom btn-sm">Add to Wishlist</a>
                     {% endif %}
                     <a href="{% url 'start_chat_item' item.id %}" class="btn btn-custom btn-sm">Chat with Seller</a>
+
+                    <!-- Add to Cart Button -->
+
+            <div>    
+                <form method="post" action="{% url 'add_to_cart' item.id %}" class="mt-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Add to Cart 🛒</button>
+                </form>
+
                 </div>
+            </div>   
             {% elif user.is_authenticated and is_seller %}
             <div class="d-flex justify-content-center gap-2">
                     <a href="{% url 'delete_item' item.id %}" class="btn btn-custom-delete btn-sm">Delete Item</a>

@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from .views import cart_view
 urlpatterns = [
     path('', views.home, name='marketplace_home'),
     
@@ -27,6 +28,14 @@ urlpatterns = [
     path('chat/start/profile/<int:profile_id>/', views.start_chat, name='start_chat_profile'),
     path('chat/<int:chat_id>/', views.chat_detail, name='chat_detail'),
     path('chats/', views.chat_list, name='chat_list'),
+
+    path('cart/', views.cart_view, name='cart'),
+    path('cart/add/<int:item_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/update/<int:cart_id>/', views.update_cart, name='update_cart'),
+    path('cart/remove/<int:cart_id>/', views.remove_from_cart, name='remove_from_cart'),
+   
+    path('cart/checkout/', views.checkout, name='checkout'),
+
     
     
 

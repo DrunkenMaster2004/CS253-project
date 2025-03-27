@@ -435,18 +435,18 @@ def add_to_cart(request, item_id):
     return redirect('cart')
 
 
-@login_required
-def update_cart(request, cart_id):
-    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+#@login_required
+#def update_cart(request, cart_id):
+ #   cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
 
-    if request.method == 'POST':
-        new_quantity = max(int(request.POST.get('quantity', 1)), 1)  # Ensures quantity is at least 1
-        if new_quantity > 0:
-            cart_item.quantity = new_quantity
-            cart_item.save()
-            messages.success(request, 'Cart updated successfully!')
+ #   if request.method == 'POST':
+  #      new_quantity = max(int(request.POST.get('quantity', 1)), 1)  # Ensures quantity is at least 1
+   #     if new_quantity > 0:
+    #        cart_item.quantity = new_quantity
+     #       cart_item.save()
+      #      messages.success(request, 'Cart updated successfully!')
 
-    return redirect('cart')
+ #   return redirect('cart')
 
 
 @login_required

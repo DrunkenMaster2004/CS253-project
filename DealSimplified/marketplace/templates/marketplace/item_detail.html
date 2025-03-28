@@ -9,7 +9,7 @@
             padding: 12px 20px;
             font-size: 1rem;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 5px;
             transition: all 0.3s ease-in-out;
             display: inline-block;
             text-align: center;
@@ -26,7 +26,7 @@
             padding: 12px 20px;
             font-size: 1rem;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 5px;
             transition: all 0.3s ease-in-out;
             display: inline-block;
             text-align: center;
@@ -57,18 +57,16 @@
             {% if user.is_authenticated and not is_seller %}
                 <div class="d-flex justify-content-center gap-2">
                     {% if in_wishlist %}
-                        <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-warning btn-sm">Remove from Wishlist</a>
+                        <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-custom  btn-sm">Remove from Wishlist</a>
                     {% else %}
                         <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-custom btn-sm">Add to Wishlist</a>
                     {% endif %}
                     <a href="{% url 'start_chat_item' item.id %}" class="btn btn-custom btn-sm">Chat with Seller</a>
 
-                    <!-- Add to Cart Button -->
-
             <div>    
-                <form method="post" action="{% url 'add_to_cart' item.id %}" class="mt-2">
+                <form method="post" action="{% url 'add_to_cart' item.id %}" >
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Add to Cart 🛒</button>
+                    <button type="submit" class="btn btn-custom  btn-sm">Add to Cart</button>
                 </form>
 
                 </div>

@@ -1,42 +1,37 @@
 {% extends 'LostNFound/base.html' %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="px-6 py-4 bg-blue-600 text-white flex justify-between items-center">
-            <h1 class="text-xl font-bold">Notifications</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm" style="border-radius: 5px;">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 5px 5px 0 0;">
+            <h4 class="mb-0">Notifications</h4>
             {% if notifications %}
-                <a href="{% url 'mark_all_notifications_read' %}" class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-blue-100">
-                    Mark all as read
-                </a>
+                <a href="{% url 'mark_all_notifications_read' %}" class="btn btn-light btn-sm">Mark all as read</a>
             {% endif %}
         </div>
         
-        <div class="divide-y divide-gray-200">
+        <div class="card-body p-0">
             {% if notifications %}
-                {% for notification in notifications %}
-                    <div class="px-6 py-4 {% if not notification.is_read %}bg-blue-50{% endif %}">
-                        <div class="flex justify-between items-start">
+                <ul class="list-group list-group-flush">
+                    {% for notification in notifications %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start {% if not notification.is_read %}bg-light{% endif %}" style="border-left: 4px solid {% if not notification.is_read %}#007bff{% else %}transparent{% endif %};">
                             <div>
-                                <p class="text-gray-800">{{ notification.message }}</p>
-                                <p class="text-sm text-gray-500 mt-1">{{ notification.created_at|timesince }} ago</p>
+                                <p class="mb-1">{{ notification.message }}</p>
+                                <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
                             </div>
-                            {% if not notification.is_read %}
-                                <a href="{% url 'mark_notification_read' notification.id %}" class="text-blue-500 hover:text-blue-700">
-                                    Mark as read
-                                </a>
-                            {% endif %}
-                            {% if notification.notification_type == 'claim' and notification.claim %}
-                                <div class="mt-2">
+                            <div class="d-flex gap-2">
+                                {% if not notification.is_read %}
+                                    <a href="{% url 'mark_notification_read' notification.id %}" class="btn btn-sm btn-outline-primary">Mark as read</a>
+                                {% endif %}
+                                {% if notification.notification_type == 'claim' and notification.claim %}
                                     <a href="{% url 'review_claim' notification.claim.id %}" class="btn btn-sm btn-primary">Review Claim</a>
-                                </div>
-                            {% endif %}
-
-                        </div>
-                    </div>
-                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% else %}
-                <div class="px-6 py-4 text-center text-gray-500">
+                <div class="p-4 text-center text-muted">
                     No notifications to display.
                 </div>
             {% endif %}

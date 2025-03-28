@@ -4,48 +4,101 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">My Found Items</h2>
+    <h2 class="mb-4 text-center fw-bold">My Found Items</h2>
 
-    {% if items %}
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for item in items %}
-                <div class="col d-flex align-items-stretch">
-                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden {% if item.status == 'claimed' %}border-success{% endif %}">
-                        {% with item.images.first as first_image %}
-                            {% if first_image %}
-                                <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+    <div class="row">
+        {% for item in items %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100 rounded-4 overflow-hidden {% if item.status == 'claimed' %}border-success{% endif %}">
+                    {% with item.images.first as first_image %}
+                        {% if first_image %}
+                            <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                    {% endwith %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold ">{{ item.name }}</h5>
+                        <div class="mt-2">
+                            {% if item.status == 'claimed' %}
+                                <span class="badge bg-success">Claimed</span>
+                            {% elif item.status == 'closed' %}
+                                <span class="badge bg-secondary">Closed</span>
                             {% else %}
-                                <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
-                            {% endif %}
-                        {% endwith %}
-                        <div class="card-body">
-                            <h5 class="card-title text-center">{{ item.name }}</h5>
-                            <div class="d-flex justify-content-center mt-2">
-                                {% if item.status == 'claimed' %}
-                                    <span class="badge bg-success">Claimed</span>
-                                {% elif item.status == 'closed' %}
-                                    <span class="badge bg-secondary">Closed</span>
-                                {% else %}
-                                    <span class="badge bg-primary">Open</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="p-3 bg-light border-top mt-auto d-flex flex-column">
-                            <a href="{% url 'found_item_detail' item.id %}" class="btn btn-info w-100 mb-2">View</a>
-                            {% if item.status != 'claimed' %}
-                                <a href="{% url 'edit_found_item' item.id %}" class="btn btn-warning w-100 mb-2">Edit</a>
-                                <form action="{% url 'close_found_item' item.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger w-100">Close</button>
-                                </form>
+                                <span class="badge bg-primary">Open</span>
                             {% endif %}
                         </div>
                     </div>
+                    <div class="p-3 bg-light border-top mt-auto d-flex justify-content-between gap-2">
+                        <a href="{% url 'found_item_detail' item.id %}" class="btn btn-view w-100 ">View</a>
+                        {% if item.status != 'claimed' %}
+                            <a href="{% url 'edit_found_item' item.id %}" class="btn btn-edit w-100 ">Edit</a>
+                            <form action="{% url 'close_found_item' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-close-item w-100 ">Close</button>
+                            </form>
+                        {% endif %}
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-warning text-center p-3 rounded">No found items listed.</div>
-    {% endif %}
+            </div>
+        {% empty %}
+            <p class="text-muted text-center w-100">No found items listed.</p>
+        {% endfor %}
+    </div>
 </div>
+
+<style>
+    .btn-view {
+        background-color: #2196F3; /* Blue */
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-view:hover {
+        background-color: #1976D2; /* Darker Blue */
+        color: white;
+    }
+
+    .btn-edit {
+        background-color: #FBC02D; /* Golden Yellow */
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-edit:hover {
+        background-color: #F9A825; /* Darker Amber */
+        color: white;
+    }
+
+    .btn-close-item {
+        background-color: #E53935; /* Red */
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-close-item:hover {
+        background-color: #C62828; /* Darker Red */
+        color: white;
+    }
+
+    .card {
+        border-radius: 5px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: 0.3s ease-in-out;
+        background: white;
+        padding: 15px;
+    }
+
+    .card:hover {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        transform: translateY(-3px);
+    }
+
+    .card-title {
+        font-weight: bold;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+
 {% endblock %}

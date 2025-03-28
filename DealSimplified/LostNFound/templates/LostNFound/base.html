@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            padding-top: 56px;
+            background: linear-gradient(to right, #FAD7A0, #FDEBD0);
+            font-family: 'Poppins', sans-serif;
+            color: #4A4A4A;
+            padding-top: 64px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -18,18 +21,76 @@
         .content {
             flex: 1;
         }
+        .navbar {
+            background: white !important;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 12px 20px;
+        }
         .navbar-brand {
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            color: #D35400 !important;
+            transition: color 0.3s;
+        }
+        .navbar-brand:hover {
+            color: #E67E22 !important;
+        }
+        .nav-link {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-right: 15px;
+            color: #4A4A4A !important; /* Default color */
+            transition: color 0.3s;
+        }
+        .nav-link.active {
+            color: #A04000; /* Darker shade of orange for the active tab */
+            font-weight: 600; /* Make it slightly bolder */
+        }
+
+        .nav-link:hover {
+            color: #D35400 !important;
+        }
+
+        .navbar .dropdown-toggle {
+            color: #4A4A4A !important; /* Ensuring username and dropdown have visible color */
+        }
+
+        .navbar .dropdown-toggle:hover {
+            color: #D35400 !important;
         }
         .footer {
-            background-color: #f8f9fa;
+            background-color: white;
             padding: 1rem 0;
-            margin-top: 2rem;
+            text-align: center;
+            box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+            color: #6C757D;
         }
-        .card-img-top {
-            height: 200px;
-            object-fit: cover;
+        .btn-custom {
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: all 0.3s ease-in-out;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-marketplace {
+            background-color: #E67E22;
+            color: white;
+            box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);
+        }
+
+        .btn-sell {
+            background-color: #D35400;
+            color: white;
+            box-shadow: 0 4px 8px rgba(211, 84, 0, 0.3);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -42,7 +103,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/marketplace/' %}active{% endif %}" href="{% url 'marketplace_home' %}">Marketplace</a>
                     </li>
@@ -105,8 +166,6 @@
         </div>
     </nav>
     
-
-
     <div class="container mt-4">
         {% if messages %}
             {% for message in messages %}
@@ -135,8 +194,9 @@
 {% block extra_js %}{% endblock %}
 
 <!-- Notification JavaScript -->
+{% if user.is_authenticated %}
 <script>
-    {% if user.is_authenticated %}
+    
     function updateNotificationCount() {
         fetch('{% url "unread_notifications_count" %}')
             .then(response => response.json())
@@ -226,8 +286,9 @@
             console.error('Error initializing notifications:', error);
         }
     });
-    {% endif %}
+    
 </script>
+{% endif %}
 </body>
 
 

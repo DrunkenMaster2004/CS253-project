@@ -1,42 +1,51 @@
 {% extends 'LostNFound/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h4>Review Claim for {{ claim.found_item.name }}</h4>
+<div class="container d-flex justify-content-center">
+    <div class="card shadow-lg border-0 p-4 mt-4" style="max-width: 800px; width: 100%; border-radius: 5px; background: #ffffff;">
+        
+        <div class="card-header text-center py-3" style=" border-radius: 5px 5px 0 0;">
+            <h2 class="text-center fw-bold text-custom">Review Claim for {{ claim.found_item.name }}</h2>
         </div>
+
         <div class="card-body">
             <div class="row mb-4">
+                <!-- Item Details -->
                 <div class="col-md-6">
-                    <h5>Item Details</h5>
+                    <h5 class="fw-semibold">Item Details</h5>
                     <p><strong>Item:</strong> {{ claim.found_item.name }}</p>
                     <p><strong>Category:</strong> {{ claim.found_item.category.name }}</p>
                     <p><strong>Found at:</strong> {{ claim.found_item.found_location }}</p>
                     <p><strong>Found on:</strong> {{ claim.found_item.found_date }}</p>
                 </div>
+
+                <!-- Claim Details -->
                 <div class="col-md-6">
-                    <h5>Claim Details</h5>
+                    <h5 class="fw-semibold">Claim Details</h5>
                     <p><strong>Claimed by:</strong> {{ claim.claimant.user.username }}</p>
                     <p><strong>Date Claimed:</strong> {{ claim.date_claimed }}</p>
                     <p><strong>Proof of Ownership:</strong></p>
-                    <div class="alert alert-secondary">{{ claim.proof_details }}</div>
+                    <div class="alert alert-secondary border rounded-3 px-3 py-2" style="background: #f8f9fa;">
+                        {{ claim.proof_details }}
+                    </div>
                 </div>
             </div>
             
+            <!-- Review Form -->
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group mb-3">
-                    <label for="review_text">Your Review (optional):</label>
-                    <textarea class="form-control" id="review_text" name="review_text" rows="4"></textarea>
+                    <label for="review_text" class="fw-semibold">Your Review (optional):</label>
+                    <textarea class="form-control shadow-sm" id="review_text" name="review_text" rows="4" style="border-radius: 5px; border: 1px solid #ced4da;"></textarea>
                     <small class="form-text text-muted">Add any comments or questions about this claim.</small>
                 </div>
                 
-                <div class="d-flex justify-content-between mt-4">
-                    <button type="submit" name="action" value="approve" class="btn btn-success">
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="submit" name="action" value="approve" class="btn btn-approve px-4 py-2">
                         <i class="fas fa-check"></i> Approve Claim
                     </button>
-                    <button type="submit" name="action" value="reject" class="btn btn-danger">
+                    <button type="submit" name="action" value="reject" class="btn btn-reject px-4 py-2">
                         <i class="fas fa-times"></i> Reject Claim
                     </button>
                 </div>
@@ -44,4 +53,46 @@
         </div>
     </div>
 </div>
+
+<!-- Custom Styling -->
+<style>
+    .btn-approve {
+        background-color: #28a745;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: 0.3s ease-in-out;
+        border: none;
+    }
+    .btn-approve:hover {
+        background-color: #218838;
+        color: white;
+    }
+
+    .btn-reject {
+        background-color: #dc3545;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: 0.3s ease-in-out;
+        border: none;
+    }
+    .btn-reject:hover {
+        background-color: #c82333;
+        color: white;
+    }
+
+    .alert {
+        border-radius: 5px;
+    }
+
+    .form-control {
+        transition: 0.2s ease-in-out;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+</style>
+
 {% endblock %}

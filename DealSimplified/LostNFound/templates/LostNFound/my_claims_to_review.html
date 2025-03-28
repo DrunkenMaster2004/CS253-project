@@ -1,30 +1,73 @@
 {% extends 'LostNFound/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Claims to Review</h2>
-    
-    {% if claims %}
-        <div class="list-group">
-            {% for claim in claims %}
-                <div class="list-group-item">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ claim.found_item.name }}</h5>
-                        <small>{{ claim.date_claimed|date:"M d, Y" }}</small>
+<div class="container d-flex justify-content-center">
+    <div class="card shadow-lg border-0 rounded-4 p-4 mb-4" style="max-width: 700px; width: 100%; background: linear-gradient(to right, #ffffff, #f8f9fa);">
+        
+        <h2 class="text-center fw-semibold mb-3">Claims to Review</h2>
+
+        {% if claims %}
+            <div class="list-group">
+                {% for claim in claims %}
+                    <div class="list-group-item p-3 shadow-sm rounded-3 mb-3 border-0" style="background: #f8f9fa;">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="fw-semibold">{{ claim.found_item.name }}</h5>
+                            <small class="text-muted">{{ claim.date_claimed|date:"M d, Y" }}</small>
+                        </div>
+
+                        <p class="mb-1"><strong>Claimed by:</strong> {{ claim.claimant.user.username }}</p>
+                        <p class="mb-1"><strong>Proof details:</strong> {{ claim.proof_details }}</p>
+
+                        <div class="d-flex justify-content-center mt-3">
+                            <a href="{% url 'review_claim' claim.id %}" class="btn btn-claim px-4 py-2">Review Claim</a>
+                            <a href="{% url 'found_item_detail' claim.found_item.id %}" class="btn btn-view ms-3 px-4 py-2">View Item</a>
+                        </div>
                     </div>
-                    <p class="mb-1"><strong>Claimed by:</strong> {{ claim.claimant.user.username }}</p>
-                    <p class="mb-1"><strong>Proof details:</strong> {{ claim.proof_details }}</p>
-                    <div class="mt-3">
-                        <a href="{% url 'review_claim' claim.id %}" class="btn btn-primary">Review Claim</a>
-                        <a href="{% url 'found_item_detail' claim.found_item.id %}" class="btn btn-outline-secondary">View Item</a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-info">
-            You don't have any pending claims to review.
-        </div>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center fw-semibold">
+                No pending claims to review.
+            </div>
+        {% endif %}
+    </div>
 </div>
+
+<!-- Styling -->
+<style>
+    .btn-claim {
+        background-color: #007bff; /* Blue */
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-claim:hover {
+        background-color: #0056b3; /* Darker Blue */
+        color: white;
+    }
+
+    .btn-view {
+        background-color: #6c757d; /* Gray */
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-view:hover {
+        background-color: #5a6268; /* Darker Gray */
+        color: white;
+    }
+
+    .list-group-item {
+        transition: 0.3s ease-in-out;
+    }
+    .list-group-item:hover {
+        background: #e9ecef; /* Light Hover Effect */
+    }
+</style>
+
 {% endblock %}
+

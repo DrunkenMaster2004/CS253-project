@@ -3,29 +3,48 @@
 {% block title %}Claim Item{% endblock %}
 
 {% block content %}
+<style>
+    .btn-claim-item {
+        background-color: #E67E22; /* Golden Yellow */
+        color: white;
+        font-weight: bold;
+        border: none;
+        padding: 10px;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .btn-claim-item:hover {
+        background-color: #E65C00; /* Darker Amber */
+        color: white;
+    }
+</style>
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-dark text-white text-center rounded-top">
                     <h2 class="mb-0">Claim Item</h2>
                 </div>
-                <div class="card-body">
-                    <p>If you believe this item belongs to you, please provide details to verify your ownership.</p>
-                    
+                <div class="card-body p-4">
+                    <p class="text-muted text-center">Provide details to verify your ownership of this item.</p>
+
                     <form method="post">
                         {% csrf_token %}
-                        
-                        <div class="form-group mb-3">
-                            <label for="id_claim_details" class="form-label">Describe why this item is yours:</label>
-                            <textarea name="proof_details" id="id_claim_details" class="form-control" rows="3" required></textarea>
+
+                        <div class="mb-3">
+                            <label for="id_claim_details" class="form-label fw-bold">Describe why this item is yours:</label>
+                            <textarea name="proof_details" id="id_claim_details" class="form-control shadow-sm" rows="3" required></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100">Submit Claim</button>
+                        <button type="submit" class="btn btn-claim-item w-100">Submit Claim</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
 {% endblock %}
+

@@ -3,14 +3,14 @@
 {% block title %}My Lost Items{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4 text-center">My Lost Items</h2>
+<div class="container mt-4 mb-4">
+    <h2 class="text-center fw-bold text-custom">My Lost Items</h2>
 
     {% if items %}
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row mt-4">
             {% for item in items %}
-                <div class="col d-flex align-items-stretch">
-                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden">
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex">
+                    <div class="card shadow-lg border-0 rounded-4 overflow-hidden h-100">
                         {% with item.images.first as first_image %}
                             {% if first_image %}
                                 <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
@@ -18,15 +18,15 @@
                                 <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
                             {% endif %}
                         {% endwith %}
-                        <div class="card-body">
-                            <h5 class="card-title text-center">{{ item.name }}</h5> <!-- Item name added here -->
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold ">{{ item.name }}</h5>
                         </div>
                         <div class="p-3 bg-light border-top mt-auto d-flex justify-content-between gap-2">
-                            <a href="{% url 'lost_item_detail' item.id %}" class="btn btn-info flex-fill">View</a>
-                            <a href="{% url 'edit_lost_item' item.id %}" class="btn btn-warning flex-fill">Edit</a>
-                            <form action="{% url 'close_lost_item' item.id %}" method="post" class="flex-fill">
+                            <a href="{% url 'lost_item_detail' item.id %}" class="btn btn-view w-100">View</a>
+                            <a href="{% url 'edit_lost_item' item.id %}" class="btn btn-edit w-100">Edit</a>
+                            <form action="{% url 'close_lost_item' item.id %}" method="post" class="w-100">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger w-100">Close</button>
+                                <button type="submit" class="btn btn-close-item w-100">Close</button>
                             </form>
                         </div>
                     </div>
@@ -37,4 +37,59 @@
         <div class="alert alert-warning text-center p-3 rounded">No lost items listed.</div>
     {% endif %}
 </div>
+
+<style>
+    .btn-view {
+        background-color: #2196F3; /* Blue */
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-view:hover {
+        background-color: #1976D2; /* Darker Blue */
+        color: white;
+    }
+
+    .btn-edit {
+        background-color: #FBC02D; /* Golden Yellow */
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-edit:hover {
+        background-color: #F9A825; /* Darker Amber */
+        color: white;
+    }
+
+    .btn-close-item {
+        background-color: #E53935; /* Red */
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+    .btn-close-item:hover {
+        background-color: #C62828; /* Darker Red */
+        color: white;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: 0.3s ease-in-out;
+        background: white;
+        padding: 15px;
+    }
+
+    .card:hover {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        transform: translateY(-3px);
+    }
+
+    .card-title {
+        font-weight: bold;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+
 {% endblock %}

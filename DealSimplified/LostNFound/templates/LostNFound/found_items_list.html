@@ -3,8 +3,88 @@
 {% block title %}Found Items{% endblock %}
 
 {% block content %}
+
+<head>
+    <style>
+        .btn-custom {
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-search {
+            background-color: #E67E22; /* Deep Blue */
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #E65C00;
+            color: white;
+        }
+
+        .btn-view-details {
+            background-color: #0056b3; /* Deep Blue */
+            color: white;
+        }
+
+        .btn-view-details:hover {
+            background-color: #0073e6; /* Lighter Blue */
+        }
+
+        .btn-start-chat {
+            background-color: #008080; /* Teal */
+            color: white;
+        }
+
+        .btn-start-chat:hover {
+            background-color: #00a3a3; /* Soft Aqua */
+        }
+        .btn-claim-item {
+            background-color: #FBC02D; /* Golden Yellow */
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn-claim-item:hover {
+            background-color: #F9A825; /* Darker Amber */
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+            background: white;
+            padding: 15px;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .card-title {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .filter-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Found Items</h2>
+    <h2 class="text-center fw-bold text-custom">Found Items</h2>
     
     <!-- Add search and filter section here -->
     <div class="card mb-4 shadow-sm">
@@ -46,7 +126,7 @@
                     <label for="q" class="form-label">Search</label>
                     <div class="input-group">
                         <input type="text" name="q" id="q" class="form-control" value="{{ query }}" placeholder="Search...">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-custom btn-search">
                             <i class="bi bi-search"></i> Search
                         </button>
                     </div>
@@ -55,55 +135,36 @@
         </div>
     </div>
 
-    {% if items %}
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for item in items %}
-                <div class="col d-flex align-items-stretch">
-                    <div class="card shadow-lg h-100 d-flex flex-column border rounded-3 overflow-hidden {% if item.status == 'claimed' %}border-success{% endif %}">
-                        {% with item.images.first as first_image %}
-                            {% if first_image %}
-                                <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
-                            {% else %}
-                                <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
-                            {% endif %}
-                        {% endwith %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.name }}</h5>
-                            <p class="card-text">{{ item.description|truncatewords:20 }}</p>
-                            <div class="d-flex justify-content-center mt-2">
-                                {% if item.status == 'claimed' %}
-                                    <span class="badge bg-success">Claimed</span>
-                                {% elif item.status == 'closed' %}
-                                    <span class="badge bg-secondary">Closed</span>
-                                {% else %}
-                                    <span class="badge bg-primary">Open</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="p-3 bg-light border-top mt-auto d-flex justify-content-center gap-2">
-                            <a href="{% url 'found_item_detail' item.id %}" class="btn btn-info flex-fill">View Details</a>
-                            
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-primary flex-fill">
-                                    Start Chat
-                                </a>
-                                {% else %}
-                                    <a href="{% url 'login' %}" class="btn btn-secondary ms-2">
-                                         Log in to Chat
-                                    </a>
-                                {% endif %}
-                            {% if user.is_authenticated and user != item.reporter.user and item.status == 'open' %}
-                                <a href="{% url 'claim_found_item' item.id %}" class="btn btn-success flex-fill">
-                                    Claim Item
-                                </a>
-                            {% endif %}
-                        </div>
+    <!-- Found Items Grid -->
+    <div class="row">
+        {% for item in items %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    {% with item.images.first as first_image %}
+                        {% if first_image %}
+                            <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                    {% endwith %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">{{ item.name }}</h5>
+                        <p class="text-muted">{{ item.description|truncatewords:20 }}</p>
+                        <a href="{% url 'found_item_detail' item.id %}" class="btn btn-custom btn-view-details btn-sm w-100">View Details</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-custom btn-start-chat btn-sm w-100 mt-2">Start Chat</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-secondary btn-sm w-100 mt-2">Log in to Chat</a>
+                        {% endif %}
+                        {% if user.is_authenticated and user != item.reporter.user and item.status == 'open' %}
+                            <a href="{% url 'claim_found_item' item.id %}" class="btn btn-custom btn-claim-item btn-sm w-100 mt-2">Claim Item</a>
+                        {% endif %}
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-warning text-center p-3 rounded">No found items available.</div>
-    {% endif %}
+            </div>
+        {% empty %}
+            <p class="text-muted text-center">No found items available.</p>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -67,15 +67,16 @@ class ItemImage(models.Model):
         return f"Image for {self.item.name}"
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    # user = models.OneToOneField(Profile, on_delete=models.CASCADE)  # Use Profile, not User
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Allows multiple wishlist items per user
+
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    date_added = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        unique_together = ('user', 'item')
-        
+
     def __str__(self):
         return f"{self.user.name}'s wishlist item: {self.item.name}"
+
+    class Meta:
+        unique_together = ('user', 'item')
 
 class Chat(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sent_chats')

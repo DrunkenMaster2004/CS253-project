@@ -52,7 +52,6 @@ def create_profile(request):
     return render(request, 'marketplace/create_profile.html', {'profile_form': profile_form})
 
 @login_required
-@login_required
 def profile(request):
     # Check if profile exists, redirect if not
     try:
@@ -214,17 +213,30 @@ def items_list(request):
     return render(request, 'marketplace/items_list.html', context)
 
 @login_required
-def toggle_wishlist(request, item_id):
+def add_to_wishlist(request, item_id):
     item = get_object_or_404(Item, id=item_id)
     profile = Profile.objects.get(user=request.user)
-    
+
     wishlist_item, created = Wishlist.objects.get_or_create(user=profile, item=item)
-    
-    if not created:
+
+    if created:
+        return JsonResponse({'success': True, 'message': 'Item added to wishlist'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Item is already in your wishlist'})
+
+
+@login_required
+def remove_from_wishlist(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    profile = Profile.objects.get(user=request.user)
+
+    wishlist_item = Wishlist.objects.filter(user=profile, item=item)
+    if wishlist_item.exists():
         wishlist_item.delete()
-        return JsonResponse({'status': 'removed', 'message': 'Item removed from wishlist'})
+        return JsonResponse({'success': True, 'message': 'Item removed from wishlist'})
     
-    return JsonResponse({'status': 'added', 'message': 'Item added to wishlist'})
+    return JsonResponse({'success': False, 'message': 'Item was not in your wishlist'})
+
 
 @login_required
 def my_wishlist(request):
@@ -289,47 +301,6 @@ def start_chat(request, item_id=None, profile_id=None):
     
     return redirect('marketplace_home')
 
-# @login_required
-# def chat_list(request):
-#     profile = Profile.objects.get(user=request.user)
-    
-#     chats = Chat.objects.filter(
-#         Q(sender=profile) | Q(receiver=profile)
-#     ).order_by('-created_at')
-    
-#     return render(request, 'marketplace/chat_list.html', {'chats': chats})
-
-# @login_required
-# def chat_detail(request, chat_id):
-#     chat = get_object_or_404(Chat, id=chat_id)
-#     profile = Profile.objects.get(user=request.user)
-    
-#     if chat.sender != profile and chat.receiver != profile:
-#         messages.error(request, "You don't have access to this conversation.")
-#         return redirect('chat_list')
-    
-#     unread_messages = Message.objects.filter(chat=chat, sender=chat.sender if chat.receiver == profile else chat.receiver, is_read=False)
-#     unread_messages.update(is_read=True)
-    
-#     if request.method == 'POST':
-#         content = request.POST.get('content', '').strip()
-#         if content:
-#             Message.objects.create(
-#                 chat=chat,
-#                 sender=profile,
-#                 content=content
-#             )
-#             return redirect('chat_detail', chat_id=chat.id)
-    
-#     messages_list = Message.objects.filter(chat=chat).order_by('timestamp')
-    
-#     context = {
-#         'chat': chat,
-#         'messages': messages_list,
-#         'profile': profile
-#     }
-    
-#     return render(request, 'marketplace/chat_detail.html', context)
 @login_required
 def chat_list(request):
     profile = Profile.objects.get(user=request.user)
@@ -345,37 +316,7 @@ def chat_list(request):
     return render(request, 'marketplace/chat_list.html', {'chats': chats})
 
 
-# @login_required
-# def chat_detail(request, chat_id):
-#     chat = get_object_or_404(Chat, id=chat_id)
-#     profile = Profile.objects.get(user=request.user)
-    
-#     if chat.sender != profile and chat.receiver != profile:
-#         messages.error(request, "You don't have access to this conversation.")
-#         return redirect('chat_list')
-    
-#     unread_messages = Message.objects.filter(chat=chat, sender=chat.sender if chat.receiver == profile else chat.receiver, is_read=False)
-#     unread_messages.update(is_read=True)
-    
-#     if request.method == 'POST':
-#         content = request.POST.get('content', '').strip()
-#         if content:
-#             Message.objects.create(
-#                 chat=chat,
-#                 sender=profile,
-#                 content=content
-#             )
-#             return redirect('chat_detail', chat_id=chat.id)
-    
-#     messages_list = Message.objects.filter(chat=chat).order_by('timestamp')
-    
-#     context = {
-#         'chat': chat,
-#         'messages': messages_list,
-#         'profile': profile
-#     }
-    
-#     return render(request, 'marketplace/chat_detail.html', context)
+
 @login_required
 def chat_detail(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
@@ -435,18 +376,6 @@ def add_to_cart(request, item_id):
     return redirect('cart')
 
 
-#@login_required
-#def update_cart(request, cart_id):
- #   cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
-
- #   if request.method == 'POST':
-  #      new_quantity = max(int(request.POST.get('quantity', 1)), 1)  # Ensures quantity is at least 1
-   #     if new_quantity > 0:
-    #        cart_item.quantity = new_quantity
-     #       cart_item.save()
-      #      messages.success(request, 'Cart updated successfully!')
-
- #   return redirect('cart')
 
 
 @login_required
@@ -459,4 +388,6 @@ def remove_from_cart(request, cart_id):
 @login_required
 def checkout(request):
     return render(request, 'marketplace/checkout.html')
+
+
 

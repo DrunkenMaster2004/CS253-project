@@ -21,8 +21,9 @@ urlpatterns = [
     path('item/<int:item_id>/delete/', views.delete_item, name='delete_item'),
     path('items/', views.items_list, name='items_list'),
     
-    path('wishlist/toggle/<int:item_id>/', views.toggle_wishlist, name='toggle_wishlist'),
-    path('wishlist/', views.my_wishlist, name='my_wishlist'),
+   path('wishlist/', views.my_wishlist, name='my_wishlist'),
+    path('wishlist/add/<int:item_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('wishlist/remove/<int:item_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     
     path('chat/start/item/<int:item_id>/', views.start_chat, name='start_chat_item'),
     path('chat/start/profile/<int:profile_id>/', views.start_chat, name='start_chat_profile'),

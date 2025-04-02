@@ -38,66 +38,102 @@
         .btn-custom-delete:hover {
             transform: translateY(-2px);
             opacity: 0.9;
-            background-color: rgb(227, 34, 34); /* Changes background color to red */
+            background-color: rgb(227, 34, 34);
             color: white;
         }
     </style>
 </head>
-<div class="container d-flex justify-content-center">
-    <div class="card mb-4 shadow-sm rounded" style="max-width: 600px; width: 100%;">
-        <img src="{{ item.image.url }}" class="card-img-top rounded-top" alt="{{ item.name }}" style="max-height: 300px; object-fit: cover;">
+
+<div class="container">
+    <div class="card mb-4">
+        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
         <div class="card-body">
-            <h2 class="card-title text-center fs-4">{{ item.name }}</h2>
-            <p class="card-text text-center text-success fs-5"><strong>Price:</strong> ₹{{ item.price }}</p>
+            <h2 class="card-title">{{ item.name }}</h2>
+            <p class="card-text"><strong>Price:</strong> ₹{{ item.price }}</p>
             <p class="card-text"><strong>Description:</strong> {{ item.description }}</p>
             <p class="card-text"><strong>Seller:</strong> {{ item.seller.user.username }}</p>
             <p class="card-text"><strong>Category:</strong> {{ item.category }}</p>
             <p class="card-text"><strong>Views:</strong> {{ item.views }}</p>
 
             {% if user.is_authenticated and not is_seller %}
-                <div class="d-flex justify-content-center gap-2">
-                    {% if in_wishlist %}
-                        <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-custom  btn-sm">Remove from Wishlist</a>
-                    {% else %}
-                        <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-custom btn-sm">Add to Wishlist</a>
-                    {% endif %}
-                    <a href="{% url 'start_chat_item' item.id %}" class="btn btn-custom btn-sm">Chat with Seller</a>
-
-            <div>    
-                <form method="post" action="{% url 'add_to_cart' item.id %}" >
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-custom  btn-sm">Add to Cart</button>
-                </form>
-
-                </div>
-            </div>   
-            {% elif user.is_authenticated and is_seller %}
-            <div class="d-flex justify-content-center gap-2">
-                    <a href="{% url 'delete_item' item.id %}" class="btn btn-custom-delete btn-sm">Delete Item</a>
-            </div>
+                {% if in_wishlist %}
+                    <button class="btn btn-danger remove-wishlist-btn" 
+                    data-url="{% url 'remove_from_wishlist' item.id %}">
+                    Remove from Wishlist
+                </button>
+                {% else %}
+                    <button class="btn btn-primary add-wishlist-btn" 
+                    data-url="{% url 'add_to_wishlist' item.id %}">
+                    Add to Wishlist
+                </button>
+                {% endif %}
+                <a href="{% url 'start_chat_item' item.id %}" class="btn btn-info">Chat with Seller</a>
             {% endif %}
         </div>
     </div>
-</div>
 
-
-    <h3 class="text-center my-4 fw-semibold">Similar Items</h3>
+    <h3>Similar Items</h3>
     <div class="row">
         {% for similar_item in similar_items %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                <div class="card shadow-sm rounded">
-                    <img src="{{ similar_item.image.url }}" class="card-img-top rounded-top" alt="{{ similar_item.name }}">
-                    <div class="card-body text-center">
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ similar_item.image.url }}" class="card-img-top" alt="{{ similar_item.name }}">
+                    <div class="card-body">
                         <h5 class="card-title">{{ similar_item.name }}</h5>
-                        <p class="card-text text-success fw-bold">₹{{ similar_item.price }}</p>
+                        <p class="card-text">₹{{ similar_item.price }}</p>
                         <a href="{% url 'item_detail' similar_item.id %}" class="btn btn-sm btn-custom">View</a>
                     </div>
                 </div>
             </div>
         {% empty %}
-            <p class="text-center">No similar items found.</p>
+            <p>No similar items found.</p>
         {% endfor %}
     </div>
 </div>
+
 {% endblock %}
 
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function getCSRFToken() {
+            return document.cookie.split('; ')
+                .find(row => row.startsWith('csrftoken='))
+                ?.split('=')[1];
+        }
+
+        $(".add-wishlist-btn").click(function() {
+            var url = $(this).data("url");
+            $.ajax({
+                url: url,
+                method: "POST",
+                headers: { "X-CSRFToken": getCSRFToken() },
+                success: function(data) {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+
+        $(".remove-wishlist-btn").click(function() {
+            var url = $(this).data("url");
+            $.ajax({
+                url: url,
+                method: "POST",
+                headers: { "X-CSRFToken": getCSRFToken() },
+                success: function(data) {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

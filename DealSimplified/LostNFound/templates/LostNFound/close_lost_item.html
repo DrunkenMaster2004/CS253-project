@@ -9,10 +9,10 @@
         <h2 class="fw-bold mb-3">Close Lost Item Report</h2>
         <p class="text-muted">Are you sure you want to close this lost item report? This action cannot be undone.</p>
 
-        <form method="post">
+        <form method="post" action="{% url 'close_lost_item' item.id %}">
             {% csrf_token %}
             <div class="d-flex justify-content-center mt-4">
-                <button type="submit" class="btn btn-danger px-4 py-2">Yes, Close</button>
+                <button type="submit" name="action" value="close" class="btn btn-danger px-4 py-2">Yes, Close</button>
                 <a href="{% url 'lost_items_list' %}" class="btn btn-secondary ms-3 px-4 py-2">Cancel</a>
             </div>
         </form>
@@ -22,25 +22,25 @@
 
 <style>
     .btn-danger {
-        background-color: #E53935; /* Bootstrap danger red */
+        background-color: #E53935;
         color: white;
         font-weight: bold;
         border-radius: 6px;
         transition: 0.3s ease-in-out;
     }
     .btn-danger:hover {
-        background-color: #C62828; /* Darker red */
+        background-color: #C62828;
     }
 
     .btn-secondary {
-        background-color: #6c757d; /* Gray */
+        background-color: #6c757d;
         color: white;
         font-weight: bold;
         border-radius: 6px;
         transition: 0.3s ease-in-out;
     }
     .btn-secondary:hover {
-        background-color: #5a6268; /* Darker Gray */
+        background-color: #5a6268;
     }
 
     .card {
@@ -51,4 +51,3 @@
 </style>
 
 {% endblock %}
-

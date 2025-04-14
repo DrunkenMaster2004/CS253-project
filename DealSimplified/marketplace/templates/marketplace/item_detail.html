@@ -9,7 +9,7 @@
             padding: 12px 20px;
             font-size: 1rem;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 12px;
             transition: all 0.3s ease-in-out;
             display: inline-block;
             text-align: center;
@@ -26,7 +26,7 @@
             padding: 12px 20px;
             font-size: 1rem;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 12px;
             transition: all 0.3s ease-in-out;
             display: inline-block;
             text-align: center;
@@ -45,7 +45,20 @@
 </head>
 <div class="container d-flex justify-content-center">
     <div class="card mb-4 shadow-sm rounded" style="max-width: 600px; width: 100%;">
-        <img src="{{ item.image.url }}" class="card-img-top rounded-top" alt="{{ item.name }}" style="max-height: 300px; object-fit: cover;">
+
+        {% if item.images.all.count %}
+    <div class="row mt-2 px-2 pt-2">
+        {% for image in item.images.all %}
+            <div class="col-4 mb-2">
+                <img src="{{ image.image.url }}" alt="Item Image {{ forloop.counter }}" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+            </div>
+        {% endfor %}
+    </div>
+        {% else %}
+    <img src="https://via.placeholder.com/400x300.png?text=No+Image" class="card-img-top rounded-top" alt="No image available" style="max-height: 300px; object-fit: cover;">
+        {% endif %}
+        
+
         <div class="card-body">
             <h2 class="card-title text-center fs-4">{{ item.name }}</h2>
             <p class="card-text text-center text-success fs-5"><strong>Price:</strong> ₹{{ item.price }}</p>
@@ -57,16 +70,18 @@
             {% if user.is_authenticated and not is_seller %}
                 <div class="d-flex justify-content-center gap-2">
                     {% if in_wishlist %}
-                        <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-custom  btn-sm">Remove from Wishlist</a>
+                        <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-warning btn-sm">Remove from Wishlist</a>
                     {% else %}
                         <a href="{% url 'toggle_wishlist' item.id %}" class="btn btn-custom btn-sm">Add to Wishlist</a>
                     {% endif %}
                     <a href="{% url 'start_chat_item' item.id %}" class="btn btn-custom btn-sm">Chat with Seller</a>
 
+                    <!-- Add to Cart Button -->
+
             <div>    
-                <form method="post" action="{% url 'add_to_cart' item.id %}" >
+                <form method="post" action="{% url 'add_to_cart' item.id %}" class="mt-2">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-custom  btn-sm">Add to Cart</button>
+                    <button type="submit" class="btn btn-success">Add to Cart 🛒</button>
                 </form>
 
                 </div>

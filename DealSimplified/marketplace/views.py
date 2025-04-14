@@ -85,23 +85,24 @@ def profile(request):
 def add_item(request):
     if request.method == 'POST':
         form = ItemForm(request.POST)
-        if form.is_valid():
+        image_formset = ItemImageFormSet(request.POST, request.FILES)  # Include request.FILES for image uploads
+        
+        if form.is_valid() and image_formset.is_valid():  # Validate both the item and image forms
             item = form.save(commit=False)
             profile = Profile.objects.get(user=request.user)
             item.seller = profile
             item.save()
             
-            image_formset = ItemImageFormSet(request.POST, request.FILES, instance=item)
-            if image_formset.is_valid():
-                image_formset.save()
-                messages.success(request, f'Your item "{item.name}" has been listed!')
-                return redirect('item_detail', item_id=item.id)
-            else:
-                item.delete()  
-                messages.error(request, 'There was an error with the uploaded images.')
+            image_formset.instance = item  # Associate the formset with the saved item
+            image_formset.save()  # Save the images
+
+            messages.success(request, f'Your item "{item.name}" has been listed!')
+            return redirect('item_detail', item_id=item.id)
+        else:
+            messages.error(request, 'There was an error with the form submission. Please check the details and try again.')
     else:
         form = ItemForm()
-        image_formset = ItemImageFormSet()
+        image_formset = ItemImageFormSet()  # Empty formset for initial display
     
     return render(request, 'marketplace/add_item.html', {
         'form': form,
@@ -385,33 +386,28 @@ def chat_detail(request, chat_id):
     if chat.sender != profile and chat.receiver != profile:
         messages.error(request, "You don't have access to this conversation.")
         return redirect('chat_list')
-    
+
     # Mark unread messages as read
     Message.objects.filter(chat=chat, is_read=False).exclude(sender=profile).update(is_read=True)
-    
+
     # Handle new message submission
     if request.method == 'POST':
         content = request.POST.get('content', '').strip()
         if content:
-            # Create the chat message
             Message.objects.create(chat=chat, sender=profile, content=content)
-            
-            # Don't create a notification for regular chat messages
-            # The notification should only be created in a separate notification system
-            # NOT here in the chat_detail view
-            
             return redirect('chat_detail', chat_id=chat.id)
-    
+
     messages_list = Message.objects.filter(chat=chat).order_by('timestamp')
     chats = Chat.objects.filter(Q(sender=profile) | Q(receiver=profile)).order_by('-created_at')
-    
+
     return render(request, 'marketplace/chat_detail.html', {
         'chat': chat,
         'messages': messages_list,
         'profile': profile,
         'chats': chats,
     })
-
+ 
+ # Cart Functionality
 
 @login_required
 def cart_view(request):

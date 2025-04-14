@@ -4,15 +4,15 @@
 
 {% block content %}
 <div class="container d-flex flex-column align-items-center justify-content-center text-center" style="height: 80vh;">
-    <div class="hero-content p-5 rounded-4" style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); max-width: 500px;">
+    <div class="hero-content p-5 rounded-4" style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); max-width: 600px;">
         <h1 class="hero-title fw-bold">Welcome to the Marketplace</h1>
         <div class="container text-center">
             <p>Buy, sell, and discover amazing items.</p>
             <a href="{% url 'add_item' %}" class="btn btn-custom btn-sell">Sell an Item</a>
             <a href="{% url 'items_list' %}" class="btn btn-custom btn-marketplace">Browse Items</a>
-            <!-- <a href="{% url 'cart' %}" class="btn btn-outline-secondary">
+            <a href="{% url 'cart' %}" class="btn btn-outline-secondary">
                 🛒 Cart
-            </a> -->
+            </a>
         </div>
     </div>
 </div>

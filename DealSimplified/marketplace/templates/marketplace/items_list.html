@@ -98,7 +98,12 @@
         {% for item in items %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card shadow-sm h-100">
-                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                    {% if item.images.all %}
+            <img src="{{ item.images.first.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                   {% else %}
+            <img src="https://via.placeholder.com/300x200.png?text=No+Image" class="card-img-top" alt="No image available" style="height: 200px; object-fit: cover;">
+                   {% endif %}
+
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">{{ item.name }}</h5>
                         <p class="text-success fw-bold fs-5">₹{{ item.price }}</p>

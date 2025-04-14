@@ -74,6 +74,7 @@
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Get the chat form - use a more specific selector that matches your actual form
@@ -101,22 +102,9 @@
           setTimeout(function() {
             submitButton.disabled = false;
             submitButton.innerHTML = originalText;
-          }, 20000); // 3 seconds should be enough for most submissions
+          }, 30000); // 3 seconds should be enough for most submissions
         });
       }
     });
   </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Find all notification messages that contain chat content
-      const chatNotifications = document.querySelectorAll('.alert:contains("hii")');
-      
-      // Remove them from the DOM
-      chatNotifications.forEach(notification => {
-        notification.remove();
-      });
-    });
-  </script>
-  
-  
 {% endblock %}

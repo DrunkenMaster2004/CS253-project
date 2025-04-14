@@ -151,7 +151,20 @@
                     {% endwith %}
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">{{ item.name }}</h5>
-                        <p class="text-muted">{{ item.description|truncatewords:20 }}</p>
+
+<!-- Status badge -->
+<div class="mb-2">
+    {% if item.status == 'claimed' %}
+        <span class="badge bg-success">Claimed</span>
+    {% elif item.status == 'closed' %}
+        <span class="badge bg-secondary">Closed</span>
+    {% else %}
+        <span class="badge bg-primary">Open</span>
+    {% endif %}
+</div>
+
+<p class="text-muted">{{ item.description|truncatewords:20 }}</p>
+
                         <a href="{% url 'found_item_detail' item.id %}" class="btn btn-custom btn-view-details btn-sm w-100">View Details</a>
                         {% if user.is_authenticated %}
                             <a href="{% url 'start_chat_lostfound' item.id %}" class="btn btn-custom btn-start-chat btn-sm w-100 mt-2">Start Chat</a>

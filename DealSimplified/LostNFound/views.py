@@ -260,7 +260,8 @@ def lost_items_list(request):
     return render(request, 'LostNFound/lost_items_list.html', context)
 
 def found_items_list(request):
-    items = FoundItem.objects.all().order_by('-date_reported')
+    items = FoundItem.objects.all().prefetch_related('images').order_by('-date_reported')
+
     categories = LostFoundCategory.objects.all()
     
     category_id = request.GET.get('category')

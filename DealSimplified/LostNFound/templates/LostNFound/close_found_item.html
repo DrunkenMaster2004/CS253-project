@@ -6,14 +6,15 @@
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="card shadow-lg border-0 rounded-4 p-5 text-center" style="max-width: 500px; background: #ffffff;">
         
-        <h2 class="fw-bold  mb-3">Close Found Item Report</h2>
+        <h2 class="fw-bold mb-3">Close Found Item Report</h2>
         <p class="text-muted">Are you sure you want to mark this found item as resolved? This action cannot be undone.</p>
 
         <form method="post">
             {% csrf_token %}
+            <input type="hidden" name="action" value="close">
             <div class="d-flex justify-content-center mt-4">
                 <button type="submit" class="btn btn-primary px-4 py-2">Yes, Close</button>
-                <a href="{% url 'found_items_list' %}" class="btn btn-secondary ms-3 px-4 py-2">Cancel</a>
+                <a href="{% url 'found_item_detail' item.id %}" class="btn btn-secondary ms-3 px-4 py-2">Cancel</a>
             </div>
         </form>
 
@@ -49,6 +50,4 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 </style>
-
 {% endblock %}
-

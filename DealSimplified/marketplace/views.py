@@ -51,7 +51,7 @@ def create_profile(request):
     
     return render(request, 'marketplace/create_profile.html', {'profile_form': profile_form})
 
-@login_required
+
 @login_required
 def profile(request):
     # Check if profile exists, redirect if not

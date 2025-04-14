@@ -140,12 +140,14 @@
         {% for item in items %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card shadow-sm h-100">
-                    {% with item.images.first as first_image %}
-                        {% if first_image %}
+                    {% with item.images.all|first as first_image %}
+
+                        {% if first_image and first_image.image %}
                             <img src="{{ first_image.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
                         {% else %}
                             <img src="https://via.placeholder.com/300?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
                         {% endif %}
+                
                     {% endwith %}
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">{{ item.name }}</h5>

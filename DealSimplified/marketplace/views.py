@@ -385,28 +385,33 @@ def chat_detail(request, chat_id):
     if chat.sender != profile and chat.receiver != profile:
         messages.error(request, "You don't have access to this conversation.")
         return redirect('chat_list')
-
+    
     # Mark unread messages as read
     Message.objects.filter(chat=chat, is_read=False).exclude(sender=profile).update(is_read=True)
-
+    
     # Handle new message submission
     if request.method == 'POST':
         content = request.POST.get('content', '').strip()
         if content:
+            # Create the chat message
             Message.objects.create(chat=chat, sender=profile, content=content)
+            
+            # Don't create a notification for regular chat messages
+            # The notification should only be created in a separate notification system
+            # NOT here in the chat_detail view
+            
             return redirect('chat_detail', chat_id=chat.id)
-
+    
     messages_list = Message.objects.filter(chat=chat).order_by('timestamp')
     chats = Chat.objects.filter(Q(sender=profile) | Q(receiver=profile)).order_by('-created_at')
-
+    
     return render(request, 'marketplace/chat_detail.html', {
         'chat': chat,
         'messages': messages_list,
         'profile': profile,
         'chats': chats,
     })
- 
- # Cart Functionality
+
 
 @login_required
 def cart_view(request):

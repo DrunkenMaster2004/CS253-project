@@ -74,4 +74,49 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get the chat form - use a more specific selector that matches your actual form
+      const chatForm = document.querySelector('.card-footer form');
+      
+      if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+          // Get the submit button
+          const submitButton = this.querySelector('button[type="submit"]');
+          
+          // If the button is already disabled, prevent the form submission
+          if (submitButton.disabled) {
+            e.preventDefault();
+            return false;
+          }
+          
+          // Disable the button to prevent multiple submissions
+          submitButton.disabled = true;
+          
+          // Change button text to indicate processing
+          const originalText = submitButton.innerHTML;
+          submitButton.innerHTML = 'Sending...';
+          
+          // Re-enable the button after a short delay (in case of network issues)
+          setTimeout(function() {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+          }, 20000); // 3 seconds should be enough for most submissions
+        });
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Find all notification messages that contain chat content
+      const chatNotifications = document.querySelectorAll('.alert:contains("hii")');
+      
+      // Remove them from the DOM
+      chatNotifications.forEach(notification => {
+        notification.remove();
+      });
+    });
+  </script>
+  
+  
 {% endblock %}

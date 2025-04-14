@@ -20,7 +20,7 @@
                                         <strong>{{ chat.sender.user.username }}</strong>
                                     {% endif %}
                                     <p class="text-muted mb-0 small">
-                                        Last message: 
+                                        
                                         {% if chat.last_message %}
                                             {{ chat.last_message.text|truncatewords:5 }}
                                         {% else %}

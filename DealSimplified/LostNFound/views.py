@@ -115,7 +115,7 @@ def found_item_detail(request, item_id):
     }
     return render(request, 'LostNFound/found_item_detail.html', context)
 
-@login_required
+
 @login_required
 def claim_found_item(request, item_id):
     found_item = get_object_or_404(FoundItem, id=item_id)
@@ -153,6 +153,16 @@ def claim_found_item(request, item_id):
         'item': found_item
     })
 
+@login_required
+def my_claims(request):
+    profile = Profile.objects.get(user=request.user)
+    claims = Claim.objects.filter(
+        claimant=profile
+    ).order_by('-date_claimed')
+    
+    return render(request, 'LostNFound/my_claims.html', {
+        'claims': claims
+    })
 
 @login_required
 def review_claim(request, claim_id):
@@ -165,9 +175,8 @@ def review_claim(request, claim_id):
         action = request.POST.get('action')
         review_text = request.POST.get('review_text', '')
         
-        # Add a review field to your Claim model if it doesn't exist
-        # claim.review = review_text
-        # claim.save()
+        # Save the review text
+        claim.review = review_text
         
         if action == 'approve':
             claim.status = 'approved'
@@ -175,6 +184,7 @@ def review_claim(request, claim_id):
             claim.found_item.status = 'claimed'
             claim.found_item.save()
             
+            # Reject other claims
             other_claims = Claim.objects.filter(found_item=claim.found_item).exclude(id=claim.id)
             other_claims.update(status='rejected')
             
@@ -185,7 +195,7 @@ def review_claim(request, claim_id):
                 notification_type='status',
                 found_item=claim.found_item,
                 claim=claim,
-                message=f"Your claim for {claim.found_item.name} has been approved!" + 
+                message=f"Your claim for {claim.found_item.name} has been approved!" +
                         (f" Review: {review_text}" if review_text else "")
             )
             
@@ -202,7 +212,7 @@ def review_claim(request, claim_id):
                 notification_type='status',
                 found_item=claim.found_item,
                 claim=claim,
-                message=f"Your claim for {claim.found_item.name} has been rejected." + 
+                message=f"Your claim for {claim.found_item.name} has been rejected." +
                         (f" Reason: {review_text}" if review_text else "")
             )
             
